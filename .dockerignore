@@ -1,0 +1,14 @@
+.git
+.env
+.venv
+__pycache__
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.uv-cache
+dist
+build
+var
+powerbi
+docs
+*.pbix

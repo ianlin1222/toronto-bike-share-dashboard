@@ -1,0 +1,15 @@
+{
+  "name": "Bike Share Toronto Evidence",
+  "dataColors": ["#007B5F", "#2A6F97", "#F2C14E", "#D95D39", "#6B7D75", "#8E5EA2"],
+  "background": "#F4F7F5",
+  "foreground": "#17332A",
+  "tableAccent": "#007B5F",
+  "visualStyles": {
+    "*": {
+      "*": {
+        "title": [{"fontFace": "Segoe UI Semibold", "fontColor": {"solid": {"color": "#17332A"}}}],
+        "background": [{"color": {"solid": {"color": "#FFFFFF"}}, "transparency": 0}]
+      }
+    }
+  }
+}

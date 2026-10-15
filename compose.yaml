@@ -1,0 +1,126 @@
+name: bikeshare-dock-availability
+
+services:
+  db:
+    image: postgres:18.6-bookworm
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-bikeshare}
+      POSTGRES_USER: ${POSTGRES_USER:-bikeshare_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      BIKESHARE_INGEST_PASSWORD: ${BIKESHARE_INGEST_PASSWORD:?set BIKESHARE_INGEST_PASSWORD in .env}
+      BIKESHARE_API_PASSWORD: ${BIKESHARE_API_PASSWORD:?set BIKESHARE_API_PASSWORD in .env}
+      BIKESHARE_REPORTER_PASSWORD: ${BIKESHARE_REPORTER_PASSWORD:?set BIKESHARE_REPORTER_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-55432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./docker/postgres:/docker-entrypoint-initdb.d:ro
+    restart: unless-stopped
+
+  migrate:
+    build: .
+    env_file: .env
+    environment:
+      BIKESHARE_DATABASE_URL: ${BIKESHARE_MIGRATION_DATABASE_URL:?set BIKESHARE_MIGRATION_DATABASE_URL}
+    command: ["alembic", "upgrade", "head"]
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  collector:
+    build: .
+    env_file: .env
+    environment:
+      BIKESHARE_DATABASE_URL: ${BIKESHARE_INGEST_DATABASE_URL:?set BIKESHARE_INGEST_DATABASE_URL}
+    command: ["bikeshare", "collect"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    volumes:
+      - ./var:/app/var
+    restart: unless-stopped
+    stop_grace_period: 20s
+
+  api:
+    build: .
+    env_file: .env
+    environment:
+      BIKESHARE_DATABASE_URL: ${BIKESHARE_API_DATABASE_URL:?set BIKESHARE_API_DATABASE_URL}
+    ports:
+      - "127.0.0.1:${BIKESHARE_API_PORT:-8080}:8000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    volumes:
+      - ./var/models:/app/var/models:ro
+    restart: unless-stopped
+    stop_grace_period: 20s
+
+  test:
+    build:
+      context: .
+      target: test
+    environment:
+      BIKESHARE_APP_MODE: fixture_demo
+      BIKESHARE_TEST_ADMIN_URL: postgresql+psycopg://postgres:test-only@test-db:5432/postgres
+    command: ["uv", "run", "--locked", "--no-sync", "pytest"]
+    depends_on:
+      test-db:
+        condition: service_healthy
+    profiles: ["tools"]
+
+  test-db:
+    image: postgres:18.6-bookworm
+    environment:
+      POSTGRES_PASSWORD: test-only
+    tmpfs:
+      - /var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    profiles: ["tools"]
+
+  train:
+    build: .
+    env_file: .env
+    environment:
+      BIKESHARE_DATABASE_URL: ${BIKESHARE_MIGRATION_DATABASE_URL:?set BIKESHARE_MIGRATION_DATABASE_URL}
+    command: ["bikeshare", "train", "--dataset", "live"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    volumes:
+      - ./var:/app/var
+      - ./artifacts:/app/artifacts
+    profiles: ["training"]
+
+  archive:
+    build: .
+    env_file: .env
+    environment:
+      BIKESHARE_DATABASE_URL: ${BIKESHARE_INGEST_DATABASE_URL:?set BIKESHARE_INGEST_DATABASE_URL}
+    command:
+      - bikeshare
+      - archive
+      - --snapshot-cutoff-days
+      - "14"
+      - --raw-cutoff-days
+      - "7"
+      - --delete-after-verify
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    volumes:
+      - ./var:/app/var
+    profiles: ["maintenance"]
+
+volumes:
+  postgres_data:

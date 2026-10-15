@@ -1,0 +1,34 @@
+{
+  "last_updated": "2026-09-07T12:00:00Z",
+  "ttl": 900,
+  "version": "3.0",
+  "data": {
+    "stations": [
+      {
+        "station_id": "7000",
+        "name": [{"text": "City Hall", "language": "en"}],
+        "address": [{"text": "100 Queen St W", "language": "en"}],
+        "lat": 43.6532,
+        "lon": -79.3832,
+        "capacity": 20,
+        "is_virtual_station": false,
+        "is_valet_station": false,
+        "vehicle_type_capacity": [{"vehicle_type_ids": ["BOOST","ICONIC"], "count": 20}]
+      },
+      {
+        "station_id": "7001",
+        "name": [{"text": "Nathan Phillips Square", "language": "en"}],
+        "lat": 43.6525,
+        "lon": -79.3841,
+        "capacity": 15
+      },
+      {
+        "station_id": "bad-coordinate",
+        "name": "Bad record",
+        "lat": 143.0,
+        "lon": -79.0,
+        "capacity": 10
+      }
+    ]
+  }
+}

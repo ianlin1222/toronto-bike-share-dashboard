@@ -1,0 +1,53 @@
+Recommendation Success Conditional :=
+DIVIDE(
+    SUM('Recommendation Performance'[successes]),
+    SUM('Recommendation Performance'[known_recommendation_outcomes])
+)
+
+Recommendation Coverage :=
+DIVIDE(
+    SUM('Recommendation Performance'[known_recommendation_outcomes]),
+    SUM('Recommendation Performance'[protocol_requests])
+)
+
+End-to-End Recommendation Success :=
+DIVIDE(
+    SUM('Recommendation Performance'[successes]),
+    SUM('Recommendation Performance'[otherwise_evaluable_requests])
+)
+
+Percentage-Point Uplift :=
+VAR Uplift = AVERAGE('Recommendation Performance'[percentage_point_uplift])
+RETURN IF(ISBLANK(Uplift), BLANK(), 100 * Uplift)
+
+Performance Evidence Label :=
+IF(
+    COUNTROWS('Recommendation Performance') = 0,
+    "Pending—insufficient validated history",
+    SELECTEDVALUE(
+        'Recommendation Performance'[evidence_status],
+        "Select one evaluation run"
+    )
+)
+
+Latest Source Age Minutes :=
+VAR Latest = MAX('Refresh Status'[latest_source_retrieval_at])
+RETURN IF(ISBLANK(Latest), BLANK(), DATEDIFF(Latest, UTCNOW(), MINUTE))
+
+Poll Success Rate :=
+DIVIDE(
+    SUM('Ingestion Health'[successful_polls]),
+    SUM('Ingestion Health'[scheduled_polls])
+)
+
+Station Record Coverage :=
+DIVIDE(
+    SUM('Ingestion Health'[accepted_station_records]),
+    SUM('Ingestion Health'[expected_station_records])
+)
+
+Full Observation Rate :=
+DIVIDE(
+    SUM('Station Availability'[full_observation_count]),
+    SUM('Station Availability'[operational_observation_count])
+)

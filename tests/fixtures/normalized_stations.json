@@ -1,0 +1,40 @@
+[
+  {
+    "station_id": "7000",
+    "name": "City Hall",
+    "lat": 43.6532,
+    "lon": -79.3832,
+    "capacity": 20,
+    "num_docks_available": 4,
+    "num_bikes_available": 15,
+    "num_docks_disabled": 1,
+    "num_bikes_disabled": 0,
+    "is_installed": true,
+    "is_renting": true,
+    "is_returning": true,
+    "source_last_reported": "2026-09-07T11:59:30Z",
+    "retrieved_at": "2026-09-07T12:00:00Z",
+    "ingested_at": "2026-09-07T12:00:01Z",
+    "feed_last_updated": "2026-09-07T12:00:00Z",
+    "quality_flags": []
+  },
+  {
+    "station_id": "7001",
+    "name": "Nathan Phillips Square",
+    "lat": 43.6525,
+    "lon": -79.3841,
+    "capacity": 15,
+    "num_docks_available": 2,
+    "num_bikes_available": 13,
+    "num_docks_disabled": 0,
+    "num_bikes_disabled": 0,
+    "is_installed": true,
+    "is_renting": true,
+    "is_returning": true,
+    "source_last_reported": "2026-09-07T11:59:45Z",
+    "retrieved_at": "2026-09-07T12:00:00Z",
+    "ingested_at": "2026-09-07T12:00:01Z",
+    "feed_last_updated": "2026-09-07T12:00:00Z",
+    "quality_flags": []
+  }
+]

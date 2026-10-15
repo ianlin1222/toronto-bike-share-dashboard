@@ -1,0 +1,12 @@
+{
+  "last_updated": "2026-09-07T12:00:00Z",
+  "ttl": 900,
+  "version": "3.0",
+  "data": {
+    "vehicle_types": [
+      {"vehicle_type_id": "ICONIC", "form_factor": "bicycle", "propulsion_type": "human"},
+      {"vehicle_type_id": "BOOST", "form_factor": "bicycle", "propulsion_type": "electric_assist"},
+      {"vehicle_type_id": "SCOOTER", "form_factor": "scooter_standing", "propulsion_type": "electric"}
+    ]
+  }
+}

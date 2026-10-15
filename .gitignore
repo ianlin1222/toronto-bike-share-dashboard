@@ -1,0 +1,31 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.uv-cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.coverage
+htmlcov/
+dist/
+build/
+
+# Runtime data, database volumes, exported history, and model binaries.
+var/**
+!var/
+!var/**/
+!var/**/.gitkeep
+artifacts/**/*.joblib
+artifacts/**/*.pkl
+artifacts/**/*.parquet
+artifacts/**/*.json.gz
+
+# Power BI caches and local settings. The PBIP source and PBIX are intentional.
+powerbi/.pbi/
+powerbi/**/.pbi/
+powerbi/**/localSettings.json

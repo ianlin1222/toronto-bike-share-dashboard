@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#174d40">
+  <title>Dockside · Bike Share Toronto dashboard</title>
+  <meta name="description" content="Explore observed Toronto dock availability by station, date, and time. Interactive charts, transparent data coverage, and a live dock finder.">
+  <link rel="stylesheet" href="/assets/dashboard.css"><script src="/assets/dashboard.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to dashboard</a>
+<aside class="sidebar">
+  <a class="brand" href="/dashboard"><span class="brand-icon">↗</span> dockside<span class="version">02</span></a>
+  <p class="nav-caption">BIKE SHARE TORONTO</p>
+  <nav aria-label="Dashboard navigation"><a class="nav-item selected" href="#overview"><span>◫</span>System overview</a><a class="nav-item" href="#station-explorer"><span>⌖</span>Station explorer</a><a class="nav-item" href="#data-health"><span>▥</span>Data health</a><a class="nav-item" href="/demo"><span>↗</span>Find a return dock</a></nav>
+  <div class="sidebar-note"><span class="note-mark">i</span><h3>Observations, not predictions.</h3><p>Explore reported dock availability. Forecasts and measured rider success are still pending validation.</p><a href="#methods">About these numbers ↗</a></div>
+  <div class="sidebar-bottom">An independent Toronto project<br><span>Local dashboard · v0.2.0</span></div>
+</aside>
+<main id="main">
+  <header class="topbar"><span>WORKSPACE <span class="slash">/</span> Availability analytics</span><a href="/demo">Find a dock <span>↗</span></a></header>
+  <section id="overview">
+    <div class="title-row"><div><p class="eyebrow">THE NETWORK, AT A GLANCE</p><h1>System overview<span class="title-dot">.</span></h1><p class="subtitle">Explore when and where there’s room to return a bike.</p></div><div class="title-actions"><button id="export" disabled>↓ Export CSV</button><button class="dark" id="refresh">↻ Refresh data</button></div></div>
+    <div id="notice" class="banner" role="status">Connecting to your collected data…</div>
+    <form id="filters" class="filters" aria-label="Dashboard filters">
+      <div><label for="start">From</label><input type="date" id="start" required></div>
+      <div><label for="end">Through</label><input type="date" id="end" required></div>
+      <div class="station-filter"><label for="station">Station</label><input id="station" type="search" list="station-options" placeholder="All stations" autocomplete="off"><datalist id="station-options"></datalist></div>
+      <div><label for="day">Days</label><select id="day"><option value="all">Every day</option><option value="weekday">Weekdays</option><option value="weekend">Weekends</option></select></div>
+      <div><label for="hour">Time of day</label><select id="hour"><option value="">All hours</option></select></div>
+      <button type="submit" class="dark" id="apply">Apply filters</button><button type="button" id="reset" aria-label="Reset all dashboard filters">Reset</button>
+    </form>
+    <p class="filter-context" id="filter-context">Dates and hours use America/Toronto. Select up to 31 days.</p>
+    <div class="error" id="error" role="alert" hidden></div>
+    <div class="live-strip"><span class="status-dot" id="live-dot"></span><strong id="live-title">Checking live reports</strong><span id="live-detail">Current conditions are separate from the historical filters.</span><span class="updated" id="updated"></span></div>
+    <div id="dashboard-content" aria-busy="true">
+      <div class="kpis" aria-label="Historical metrics">
+        <button class="kpi" data-metric="average"><span class="kpi-label">AVERAGE DOCKS <span>↗</span></span><strong id="kpi-docks">—</strong><small>per fresh, return-capable observation</small><span class="kpi-stripe teal"></span></button>
+        <button class="kpi" data-metric="availability"><span class="kpi-label">DOCK AVAILABLE <span>↗</span></span><strong id="kpi-available">—</strong><small>of observations with a known dock count</small><span class="kpi-stripe gold"></span></button>
+        <button class="kpi" data-metric="stations"><span class="kpi-label">STATIONS OBSERVED <span>↗</span></span><strong id="kpi-stations">—</strong><small id="kpi-observations">within the selected filters</small><span class="kpi-stripe blue"></span></button>
+        <button class="kpi" data-metric="coverage"><span class="kpi-label">COLLECTION COVERAGE <span>↗</span></span><strong id="kpi-coverage">—</strong><small id="kpi-polls">successful / expected system polls</small><span class="kpi-stripe muted"></span></button>
+      </div>
+      <div class="chart-grid trend-grid">
+        <article class="panel"><div class="panel-heading"><div><p class="eyebrow">OVER TIME</p><h2>Dock availability trend</h2><p>Observation-weighted average · missing hours stay blank</p></div><button class="data-button" data-table="timeline">View data</button></div><div id="trend" class="chart" aria-label="Dock availability trend"></div><p class="chart-foot" id="trend-foot">Hover or focus a point for exact values.</p></article>
+        <article class="panel"><div class="panel-heading"><div><p class="eyebrow">DAILY RHYTHM</p><h2>Availability by hour</h2><p>Toronto local time · click a bar to filter</p></div><button class="data-button" data-table="hourly">View data</button></div><div id="hourly" class="chart" aria-label="Average available docks by local hour"></div><p class="chart-foot">Counts describe inventory, not pickups or returns.</p></article>
+      </div>
+      <section id="station-explorer">
+        <div class="section-heading"><div><p class="eyebrow">A CLOSER LOOK</p><h2>Explore the stations</h2></div><p>Click a station on either chart to focus the whole dashboard.</p></div>
+        <div class="chart-grid station-grid">
+          <article class="panel"><div class="panel-heading"><div><h2>Where docks are available</h2><p>Colour = observed availability · size = average docks</p></div><button class="data-button" data-table="stations">View data</button></div><div id="station-map" class="chart station-map"></div><div class="map-legend"><span><i class="dot gold"></i>Less often</span><span class="gradient"></span><span><i class="dot teal"></i>More often</span><small>Geographic plot · not a street map</small></div><div id="station-detail" class="station-detail" aria-live="polite">Hover or focus a station for its name and numbers. Click to filter.</div></article>
+          <article class="panel"><div class="panel-heading"><div><h2>Stations to keep an eye on</h2><p>Highest full-dock observation share · not a forecast</p></div><button class="data-button" data-table="rankings">View data</button></div><div id="rankings" class="rankings"></div><p class="chart-foot">Among observed stations; sparse samples can be misleading.</p></article>
+        </div>
+        <article class="panel heat-panel"><div class="panel-heading"><div><h2>The week, hour by hour</h2><p>Share of fresh return-capable observations with at least one dock · click a cell to explore</p></div><button class="data-button" data-table="heatmap">View data</button></div><div id="heatmap" class="heatmap"></div><p class="chart-foot">Monday → Sunday · 00:00 → 23:00 · grey cells have no usable observations. DST repeated hours are combined here, but kept distinct in the trend.</p></article>
+        <article class="panel table-panel"><div class="panel-heading"><div><h2>Station data</h2><p id="table-count">Your filtered results, ready to inspect.</p></div><input type="search" id="table-search" placeholder="Search these results…" aria-label="Search station table"></div><div class="table-scroll"><table><thead><tr><th><button data-sort="name">Station ↕</button></th><th><button data-sort="average_docks">Avg. docks ↕</button></th><th><button data-sort="availability_rate">Dock available ↕</button></th><th><button data-sort="observations">Observations ↕</button></th><th>Fresh reports</th><th>Explore</th></tr></thead><tbody id="station-rows"></tbody></table></div><div class="pagination"><button id="previous">← Previous</button><span id="page-label">Page 1</span><button id="next">Next →</button></div></article>
+      </section>
+      <section id="data-health"><div class="section-heading"><div><p class="eyebrow">TRUST THE NUMBERS</p><h2>Coverage &amp; data health</h2></div><button class="data-button" data-table="health">View data</button></div><div class="chart-grid health-grid"><article class="panel"><div class="panel-heading"><div><h2>Successful collection by day</h2><p>Includes missing polls when the host was asleep or stopped</p></div></div><div id="health-chart" class="chart"></div></article><article class="panel evidence"><span class="pending">EVIDENCE STATUS</span><h2>Forecast performance is pending.</h2><p>No validated success rate or uplift is available. These charts show observed inventory, not a rider trial.</p><dl><dt>Historical source</dt><dd id="source-label">—</dd><dt>Known history</dt><dd id="history-label">—</dd><dt>Last aggregation</dt><dd id="aggregate-label">—</dd></dl><a href="/demo">Use the current-availability dock finder ↗</a></article></div></section>
+      <details class="methods panel" id="methods"><summary>How to read this dashboard</summary><div id="definitions"></div><p>Generic Bike Share bicycle compatibility is assumed. No trip flows, rebalancing counts, routed distances, or model probabilities are inferred. Station plots use current-known coordinates. CSV exports contain only the displayed aggregate station statistics, not rider requests.</p><p>The browser dashboard complements the project’s Power BI assets; it is not a verified PBIX report.</p><p>Design reference: <a href="https://www.youtube.com/shorts/NPsdtMxg5wQ" target="_blank" rel="noreferrer">Claude Turned Bike Data Into a Video</a>. Adapted as a manual dashboard without animation.</p></details>
+    </div>
+  </section>
+  <footer><span>dockside / Toronto <span class="version">v0.2.0</span></span><span>Contains information licensed under the <a href="https://www.toronto.ca/city-government/data-research-maps/open-data/open-data-licence/">Open Government Licence – Toronto</a>.</span></footer>
+</main>
+<dialog id="inspector"><div class="dialog-heading"><h2 id="inspect-title">Inspect data</h2><button id="close-inspector" aria-label="Close data inspector">✕</button></div><p id="inspect-description"></p><div id="inspect-content"></div><button class="dark" id="inspect-export">↓ Download this data</button></dialog>
+<noscript>This dashboard requires JavaScript. Raw data is available at <a href="/v1/dashboard">/v1/dashboard</a>.</noscript>
+</body></html>

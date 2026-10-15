@@ -1,0 +1,44 @@
+{
+  "last_updated": "2026-09-07T12:00:00Z",
+  "ttl": 5,
+  "version": "3.0",
+  "data": {
+    "stations": [
+      {
+        "station_id": "7000",
+        "num_docks_available": 4,
+        "num_docks_disabled": 1,
+        "num_vehicles_available": 15,
+        "num_vehicles_disabled": 0,
+        "is_installed": true,
+        "is_renting": true,
+        "is_returning": true,
+        "last_reported": "2026-09-07T11:59:30Z",
+        "vehicle_types_available": [
+          {"vehicle_type_id": "ICONIC", "count": 12},
+          {"vehicle_type_id": "BOOST", "count": 3},
+          {"vehicle_type_id": "SCOOTER", "count": 0}
+        ],
+        "vehicle_docks_available": [{"vehicle_type_ids": ["ICONIC","BOOST"], "count": 4}]
+      },
+      {
+        "station_id": "7001",
+        "num_docks_available": 0,
+        "num_docks_disabled": 0,
+        "num_vehicles_available": 15,
+        "is_installed": true,
+        "is_renting": true,
+        "is_returning": true,
+        "last_reported": "2026-09-07T11:59:45Z",
+        "vehicle_types_available": [{"vehicle_type_id": "ICONIC", "count": 15}]
+      },
+      {
+        "station_id": "broken",
+        "num_docks_available": -1,
+        "is_installed": true,
+        "is_returning": true,
+        "last_reported": "2026-09-07T11:59:00Z"
+      }
+    ]
+  }
+}

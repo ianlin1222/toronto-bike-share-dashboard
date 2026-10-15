@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#174d40"><meta name="description" content="Find a Bike Share Toronto station with room for your return.">
+  <title>Dockside · Toronto return stations</title>
+  <link rel="stylesheet" href="/assets/style.css"><script src="/assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#search">Skip to destination search</a>
+<header class="site-header"><a class="brand" href="/" aria-label="Dockside home"><span class="brand-mark" aria-hidden="true">↗</span>dockside<span class="city">TORONTO</span></a><a href="/dashboard" class="quiet-link">System dashboard ↗</a><a href="#how-it-works" class="quiet-link">How it works <span aria-hidden="true">↘</span></a></header>
+<main>
+  <section class="hero"><div><p class="eyebrow">A BETTER PLACE TO FINISH YOUR RIDE</p><h1>Make room for<br>your next stop.</h1><p class="intro">Find a nearby return station with an available dock,<br class="desktop-break"> plus an alternative to keep in mind.</p></div>
+    <aside class="health" aria-live="polite"><div class="status-line"><span class="status-dot" id="status-dot"></span><strong id="status-title">Checking station updates</strong></div><p id="status-detail">Connecting to the local service…</p><div class="health-bottom"><span id="station-count">Bike Share Toronto</span><span id="feed-age"></span></div></aside>
+  </section>
+  <section class="workspace" aria-label="Station finder">
+    <div class="search-panel"><div class="step-title"><span class="step">01</span><h2>Where are you headed?</h2></div>
+      <form id="search">
+        <label for="destination">Destination or nearby station</label>
+        <input id="destination" name="destination" type="search" list="destinations" autocomplete="off" placeholder="Choose a place or station" value="Toronto City Hall" aria-describedby="destination-help" required>
+        <datalist id="destinations"></datalist>
+        <p class="hint" id="destination-help">Choose a suggested landmark or Bike Share station. For another address, enter its coordinates below.</p>
+        <div class="presets" aria-label="Popular destinations"><button type="button" data-place="Toronto City Hall">City Hall</button><button type="button" data-place="Union Station">Union Station</button><button type="button" data-place="University of Toronto">U of T</button></div>
+        <details id="coordinates"><summary>Use exact coordinates</summary><div class="two-fields"><div><label for="lat">Latitude</label><input id="lat" type="number" min="43.45" max="43.95" step="any" value="43.6532"></div><div><label for="lon">Longitude</label><input id="lon" type="number" min="-79.8" max="-79" step="any" value="-79.3832"></div></div><p class="hint">Toronto coordinates only. Used locally for this search.</p></details>
+        <div class="two-fields options"><div><label for="horizon">Arriving in</label><select id="horizon" name="horizon"><option value="5">5 minutes</option><option value="10">10 minutes</option><option value="15" selected>15 minutes</option><option value="30">30 minutes</option></select></div><div><label for="radius">Search within</label><select id="radius" name="radius"><option value="250">250 metres</option><option value="500">500 metres</option><option value="750" selected>750 metres</option><option value="1000">1 kilometre</option><option value="1500">1.5 kilometres</option><option value="2000">2 kilometres</option></select></div></div>
+        <p class="arrival-note" id="arrival-note">Arrival forecasts are not available yet. Results use reported docks available now.</p>
+        <p id="input-error" class="input-error" role="alert" hidden></p>
+        <button id="find" class="button primary" type="submit">Find return stations <span aria-hidden="true">↗</span></button>
+      </form>
+      <p class="search-footnote">No account. No location permission.<br>Distances are straight-line, not route lengths.</p>
+    </div>
+    <div class="results-panel" id="results-panel"><div class="results-heading"><div class="step-title"><span class="step">02</span><h2>Your return options</h2></div><button type="button" class="refresh" id="refresh" aria-label="Refresh station recommendations">↻ Refresh</button></div>
+      <div id="mode-notice" class="notice" hidden></div>
+      <div id="output" aria-live="polite" aria-atomic="false"><div class="empty"><span class="empty-icon" aria-hidden="true">↗</span><h3>A good ending starts here.</h3><p>Choose your destination, then find nearby stations with room for your bike.</p></div></div>
+      <div id="diagram-wrap" class="diagram-wrap" hidden><div class="diagram-heading"><span>Near your destination</span><span class="hint">Relative positions · not a street map</span></div><svg id="diagram" viewBox="0 0 560 220" role="img" aria-label="Relative station positions around your destination"></svg><p class="diagram-legend"><span>● Destination</span><span>P Primary</span><span>A Alternative</span></p></div>
+      <div id="result-footer" class="result-footer" hidden><span id="result-time"></span><label class="check-label"><input type="checkbox" id="auto-refresh" checked> Update every minute</label></div>
+    </div>
+  </section>
+  <section class="explanation" id="how-it-works"><div><p class="eyebrow">KNOW BEFORE YOU GO</p><h2>A useful guide.<br>No dock reservations.</h2></div><div><h3>Current availability comes first.</h3><p>We check that stations are accepting returns and have a fresh report, then choose the closest station with an available dock. Availability may change before you arrive.</p></div><div><h3>Keep an alternative in mind.</h3><p>The alternative is a distinct nearby station, assessed at the same arrival time. Extra travel after trying the primary station is not modeled. We assume standard Bike Share bicycles fit the reported functional docks.</p></div></section>
+  <details class="project-details"><summary>About this project &amp; data</summary><p>This independent demonstration uses public Bike Share Toronto data. Forecast probabilities and measured recommendation performance are pending sufficient collected history and validation. Sample mode is labeled and uses fictional availability.</p><p>Contains information licensed under the <a href="https://www.toronto.ca/city-government/data-research-maps/open-data/open-data-licence/" target="_blank" rel="noreferrer">Open Government Licence – Toronto</a>. Not an official Bike Share Toronto application.</p><p><a href="/docs">API documentation</a> · <a href="/readyz">Service status</a></p></details>
+</main>
+<footer><span>dockside / Toronto</span><span>A little planning. A smoother return.</span></footer>
+</body></html>
