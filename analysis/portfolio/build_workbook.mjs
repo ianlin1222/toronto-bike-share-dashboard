@@ -209,11 +209,16 @@ if(sh.Overview.getRange('C17').values[0][0]!==other.reports) throw Error('Statio
 cell(sh.Overview,'C15','not-a-station');wb.recalculate();
 if(sh.Overview.getRange('C17').values[0][0]!=='Unknown ID') throw Error('Missing key failed');
 cell(sh.Overview,'C15',original);
-cell(sh['Time patterns'],'M6','Weekend');wb.recalculate();
-const expected=data.time_patterns.find(r=>r.day_type==='Weekend'&&r.local_hour===0);
-const actual=sh['Time patterns'].getRange('M9').values[0][0];
-if(expected&&expected.reports>=100&&expected.observed_days>=3&&Math.abs(actual-expected.available_reports/expected.reports)>1e-10) throw Error('Day filter failed');
-cell(sh['Time patterns'],'M6','Weekday');wb.recalculate();
+for(const dayType of ['Weekend','Weekday']) {
+ cell(sh['Time patterns'],'M6',dayType);wb.recalculate();
+ for(let hour=0;hour<24;hour++) {
+  const expected=data.time_patterns.find(r=>r.day_type===dayType&&r.local_hour===hour);
+  const actual=sh['Time patterns'].getRange(`M${9+hour}`).values[0][0];
+  if(expected&&expected.reports>=100&&expected.observed_days>=3) {
+   if(typeof actual!=='number'||Math.abs(actual-expected.available_reports/expected.reports)>1e-10) throw Error(`Day filter failed: ${dayType} ${hour}`);
+  } else if(actual!=='n.a.') throw Error(`Unsupported hour was not omitted: ${dayType} ${hour}`);
+ }
+}
 for(let r=cr+1;r<=cr+3;r++) if(checks.getRange(`C${r}`).values[0][0]!==0) throw Error('Reconciliation failed');
 if(Math.abs(sh.Overview.getRange('C7').values[0][0]-q.available_reports/q.eligible_reports)>1e-10) throw Error('Headline mismatch');
 const errorScan=await wb.inspect({select:"$.sheets[*].cells[?(@.formula && @.valueType == 'error')]",include:['sheet','address','formula','error']});
