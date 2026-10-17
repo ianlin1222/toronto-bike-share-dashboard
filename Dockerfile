@@ -36,6 +36,7 @@ FROM runtime AS test
 USER root
 COPY tests ./tests
 COPY scripts ./scripts
+COPY analysis ./analysis
 COPY .env.example ./
 RUN --mount=type=cache,target=/root/.cache/uv uv sync --locked --group dev
 RUN chown app:app /app

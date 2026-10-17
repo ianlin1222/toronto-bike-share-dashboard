@@ -12,3 +12,6 @@ var
 powerbi
 docs
 *.pbix
+**/node_modules
+outputs
+output

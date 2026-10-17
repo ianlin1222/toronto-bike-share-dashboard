@@ -1,0 +1,11 @@
+{
+  "analysis_version": "1.0.0",
+  "start_utc": "2026-09-16T18:55:00+00:00",
+  "end_utc_exclusive": "2026-10-17T17:00:00+00:00",
+  "timezone": "America/Toronto",
+  "poll_seconds": 60,
+  "fresh_seconds": 300,
+  "station_min_reports": 100,
+  "station_min_days": 5,
+  "nearby_radius_m": 750
+}

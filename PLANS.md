@@ -180,3 +180,47 @@ Final delivery acceptance (2026-10-14 16:14 UTC):
 Dashboard software is accepted for this extension. Data/evaluation/Power BI
 statuses above remain unchanged. Open http://127.0.0.1:8080/dashboard; use manual
 filters and Refresh data. Keep Docker Desktop running and monitor free disk space.
+
+## Analytical portfolio edition 1.0.0 (2026-10-17)
+
+User-authorized extension: create professional SQL analysis, an Excel workbook
+and a PDF case study from the collected real data, then commit and push to the
+existing GitHub repository. Application version remains 0.2.0; no production
+model, collector configuration or database schema was changed.
+
+Deliverables:
+
+- `analysis/portfolio/`: frozen contract, 11 SQL files, read-only exporter,
+  aggregate CSV/JSON exports, manifests, findings and interview walkthrough.
+- `outputs/portfolio-2026-10-17/Dockside_Analysis.xlsx`: seven sheets, eight native
+  tables, two charts, station/day-type controls and formula-linked analysis.
+- `output/pdf/Dockside_Case_Study.pdf`: five-page evidence-first case study.
+- Artifact builders, independent saved-file checks, data reconciliation tests
+  and PostgreSQL SQL-contract tests. CI now includes portfolio Python linting.
+
+| Acceptance check | Evidence |
+| --- | --- |
+| Real source | Live snapshots retrieved and ingested before 2026-10-17 17:00 UTC; no synthetic observations or trip reconstruction |
+| Frozen window | 2026-09-16 18:55 UTC inclusive to 2026-10-17 17:00 UTC exclusive; Toronto calendar |
+| SQL execution | Repeatable-read read-only extraction; one shared materialized CTE scan; no production data mutation |
+| Counts | 840,283 eligible unique reports, 790,386 with a dock (94.1%); 1,075 stations |
+| Coverage | 1,503 successful / 44,525 expected minute slots (3.4%); 11 observed dates; 21 absent dates |
+| Quality | Repeated source reports deduplicated; freshness and conflict sensitivity published; 198,740 future-report timestamp quarantines disclosed without an unproven cause |
+| Reconciliation | Station/date/hour/station-date totals, aggregate hashes and SQL hashes pass |
+| Full suite | 65 passed against isolated PostgreSQL 18.6; two upstream TestClient deprecation warnings; isolated test service stopped afterward |
+| Static checks | Ruff including portfolio scripts, strict mypy (39 source files), JavaScript syntax and diff whitespace checks pass |
+| Excel artifact | Recalculated; station, missing-ID and day-type controls tested; 3,473 cached formulas, no error cells; native chart/table/dropdown parts verified; all sheet previews reviewed |
+| Excel application | Native Microsoft Excel did not respond; application-level opening/interaction remains unverified and is disclosed |
+| PDF | Five pages rendered and visually inspected; extractable text, key numbers and delivered-file hash verified |
+| Privacy | Only public station aggregates and metadata published; no rider requests, raw source bodies, credentials, database volumes or runtime symlinks |
+
+The spreadsheet skill required native workbook authoring, recalculation and
+preview checks. Native tables/formulas are delivered; no unsupported PivotTable
+or slicer claim is made. The PDF skill required rendering and reviewing every page.
+
+Evidence remains **exploratory**. The 94.1% observed report rate is not prediction
+accuracy, rider success or time-weighted reliability. The 84-day readiness gate,
+held-out replay, 82% / +14 pp claims and real Power BI artifact remain pending.
+Next executable action: maintain collection continuity and investigate timestamp
+quarantines/conflicts before widening the analytical claims. Git publication is
+verified separately by the successful push and repository CI result.

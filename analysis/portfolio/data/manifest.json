@@ -1,0 +1,46 @@
+{
+  "configuration": {
+    "analysis_version": "1.0.0",
+    "start_utc": "2026-09-16T18:55:00+00:00",
+    "end_utc_exclusive": "2026-10-17T17:00:00+00:00",
+    "timezone": "America/Toronto",
+    "poll_seconds": 60,
+    "fresh_seconds": 300,
+    "station_min_reports": 100,
+    "station_min_days": 5,
+    "nearby_radius_m": 750
+  },
+  "extracted_at_utc": "2026-10-17T17:19:05.905824+00:00",
+  "source_kind": "live",
+  "snapshot_table": "station_snapshots",
+  "transaction": "REPEATABLE READ READ ONLY; common CTEs; rollback",
+  "git_commit_at_extraction": "cf8ca48171de20585b8ffe33cfc4b4d57aa630a9",
+  "csv_sha256": {
+    "quality.csv": "3d215f7142fe7711771b2c93a2f17f3821a832f06d1b6cb2150bd2bff92f43a4",
+    "daily.csv": "2d8086f7ae4d8bb8e82f2659e43111bb2748a57f55da68c4715df7fcef1b173e",
+    "stations.csv": "44b4d4b2d93b374ff68ec075d310383c84724472d3ddf1bd01f2c4a7d1b3532b",
+    "time_patterns.csv": "cf21589950b0afb74274339d1d41f6214d9ac1c9fd03194956f4bc094fb48240",
+    "station_days.csv": "a0816242ab29730321107f1bfdaa4d858b66162eec94e4b2dfc1abfeffb764a9",
+    "sensitivity.csv": "695537ca2aa24dee32c1eb6d9ef952f446aa4f1446bf842477e20263f036da07",
+    "nearby.csv": "ac29d90bcee8b19970fbd7cd338eeebc2b7aea19bf1e3052ae56dd3518f43829",
+    "provenance.csv": "38fb8a406c369f7f2d2139bc7ceaf962da94d386961083e444ecd9af341b67a4",
+    "conflict_sensitivity.csv": "738cd124206fccfa132d7229a697ab9db910f0d6fbe9fe2503ea711ef64fcc97",
+    "quarantine_reasons.csv": "506d790ce1ff65f97d626a701cf2a4f5bff9b18528e68e708463f018669db4fa"
+  },
+  "analysis_json_sha256": "264fbf282c83f8e792e32cd58824141104aee69379c8e3dd96970cb6c954f6ba",
+  "sql_sha256": {
+    "00_prepare.sql": "a85bcc733c38b7f184a54142d1f1058cf378cd8cbd603614b7761a5f526321a9",
+    "01_quality.sql": "8ed48b12a513410dfd1eb55493c8f79855e082b6dd834c05757a7741a9e52e0b",
+    "02_daily.sql": "80c926d4bd895b9468a275eded3275a33ec02a153e688b1321860e9280b76a7b",
+    "03_stations.sql": "23491ea386bd7ebd56185544ac0e041b59e7023684d2a9c539e31d309439742a",
+    "04_time_patterns.sql": "f5c446c19727f4e532445807d1e1788bec56af0e4cd1bc8466aef14f350dd669",
+    "05_station_days.sql": "7037b5a3c6aaf1c9262968b7f24307d2cdd485b07836e31806c6b549baf98c69",
+    "06_sensitivity.sql": "0b197b676d86287d03ea5a91ee109c8191974bcf747f7eca7c0a3be36137343f",
+    "07_nearby.sql": "3e61ed7b7920fe2b7fb7522a5b6bfb64fd5c258da8e9bc3a856627cf5262f87d",
+    "08_provenance.sql": "f67258b112613128eb37d01262e27c76b1e44d7330b464395c8b5dc40649c304",
+    "09_conflict_sensitivity.sql": "1f6726a754c15ca7dca62fe9fafa904230d4bc92fd30f73b1e2a11e191792ca6",
+    "10_quarantine_reasons.sql": "d228145eb7baaf86f4ec8a451600294bb05d7c04a854832246c264983be25b2c"
+  },
+  "source_url": "https://toronto.publicbikesystem.net/customer/gbfs/v3.0/gbfs.json",
+  "attribution": "Contains information licensed under the Open Government Licence \u2013 Toronto."
+}

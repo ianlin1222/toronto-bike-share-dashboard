@@ -30,7 +30,7 @@ jobs:
           version: "0.12.10"
           enable-cache: true
       - run: uv sync --locked --group dev
-      - run: uv run ruff check src tests alembic scripts
+      - run: uv run ruff check src tests alembic scripts analysis/portfolio
       - run: uv run mypy
       - run: uv run pytest tests/unit tests/contract tests/e2e
       - run: uv run pytest -m integration tests/integration

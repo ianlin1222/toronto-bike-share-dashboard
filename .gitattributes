@@ -1,0 +1,8 @@
+# Keep byte-hashed analytical evidence stable across Windows/macOS checkouts.
+analysis/portfolio/data/*.csv -text whitespace=cr-at-eol
+analysis/portfolio/data/*.json text eol=lf
+analysis/portfolio/sql/*.sql text eol=lf
+analysis/portfolio/*.json text eol=lf
+*.pdf binary
+*.xlsx binary
+*.png binary

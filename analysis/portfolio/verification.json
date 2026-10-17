@@ -1,0 +1,36 @@
+{
+  "scope": "Saved XLSX/PDF structure, cached formula results and source count checks",
+  "xlsx": {
+    "sheets": [
+      "Overview",
+      "Stations",
+      "Daily coverage",
+      "Time patterns",
+      "Nearby alternatives",
+      "Source QA",
+      "Read Me"
+    ],
+    "formula_cells": 3473,
+    "cached_formula_errors": 0,
+    "charts": 2,
+    "native_tables": 8,
+    "dropdowns": 2,
+    "station_selector_named_range": "'Stations'!B7:B1081",
+    "macros_external_links_and_connections": false,
+    "native_excel_application_check": "Not verified: application did not respond"
+  },
+  "pdf": {
+    "pages": 5,
+    "extractable_text_characters": [
+      1319,
+      1131,
+      1321,
+      1240,
+      2030
+    ]
+  },
+  "sha256": {
+    "outputs/portfolio-2026-10-17/Dockside_Analysis.xlsx": "7a74a8c49f1bd8faae5baa358c70341cab235e4cea78fb611feaeeb501434f61",
+    "output/pdf/Dockside_Case_Study.pdf": "2505cb58f3e70380dc74068b840729a9c05d18330f6801291f2070af7954fd41"
+  }
+}
