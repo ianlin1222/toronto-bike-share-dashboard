@@ -224,3 +224,31 @@ held-out replay, 82% / +14 pp claims and real Power BI artifact remain pending.
 Next executable action: maintain collection continuity and investigate timestamp
 quarantines/conflicts before widening the analytical claims. Git publication is
 verified separately by the successful push and repository CI result.
+
+## Notebook PDF revision (2026-10-17)
+
+User requested the PDF use the cleaner output format of a Jupyter notebook.
+Replaced the hand-designed ReportLab report with an actual executed notebook,
+nbconvert classic HTML and a Chromium-generated six-page PDF at the same path.
+The `.ipynb` is the editable source of truth and includes all ten executed code
+cells, three matplotlib figure outputs, pandas tables and explanatory Markdown.
+The PDF/HTML omit five boilerplate input cells while retaining every output.
+The PDF skill's render-and-review workflow was used to inspect all six pages;
+the final export has no orphan paragraphs or clipped charts/tables.
+
+- Frozen source data, SQL, reported headline metrics and Excel bytes are unchanged.
+- The hourly figure now separates weekdays/weekends. Blank cells are explicitly
+  insufficient support, not zero availability. This is not new performance evidence.
+- Added hash-locked optional notebook dependencies in an isolated ignored local
+  environment; the running application's dependencies and services are untouched.
+- The HTML has no scripts and works offline; PDF rendering blocks HTTP(S) requests
+  and uses a separate temporary browser, not the user's profile.
+- Validation: ten successful execution counts, zero notebook errors, three figure
+  outputs, matching executed-code/data hashes, six rendered/inspected PDF pages,
+  updated artifact verification manifest, 57 passing non-database tests, Ruff and
+  strict mypy. Earlier 65-test database-inclusive evidence remains recorded above.
+- Updated READMEs, findings and the report cover preview. The prior PDF remains
+  recoverable from Git history. Data/model/Power BI readiness statuses are unchanged.
+
+Rebuild with `python analysis/portfolio/build_report.py` in the documented optional
+notebook environment, then run `python analysis/portfolio/verify_artifacts.py`.

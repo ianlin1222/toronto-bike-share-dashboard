@@ -14,8 +14,11 @@ The existing application is unchanged by this analysis.
 - [Excel analysis](../../outputs/portfolio-2026-10-17/Dockside_Analysis.xlsx): native
   charts, formula-linked metrics, filterable station tables, station-ID selector,
   weekday/weekend control, quality reconciliation and refresh instructions.
-- [Five-page case study](../../output/pdf/Dockside_Case_Study.pdf): question,
+- [Notebook-style PDF case study](../../output/pdf/Dockside_Case_Study.pdf): question,
   findings, coverage, station comparisons, nearby comparison and limitations.
+- [Executed Jupyter notebook](Dockside_Case_Study.ipynb) and
+  [offline HTML export](../../output/notebook/Dockside_Case_Study.html): real Python
+  cells, pandas tables and matplotlib charts, with all outputs included.
 - [SQL](sql/): CTEs, window-function deduplication, conditional aggregation,
   missing-minute generation, point-in-time metadata joins and spatial comparison.
 - [Frozen aggregate exports](data/) and [extraction manifest](data/manifest.json):
@@ -31,7 +34,10 @@ analysis/portfolio/
   export.py                 SELECT-only, repeatable-read extraction
   data/                     Public aggregate CSV/JSON and hashes; no rider requests
   build_workbook.mjs         Excel authoring and formula/control validation
-  build_report.py           Vector PDF report generation
+  Dockside_Case_Study.ipynb  Executable analysis and verified outputs
+  build_report.py           Execute notebook; export HTML and PDF
+  notebook_print.css        Minimal notebook print styling
+  requirements-report.*     Isolated, hash-locked notebook build dependencies
   verify_artifacts.py       Independent saved XLSX/PDF checks
   verification.json         Artifact checks and SHA-256 hashes
   findings.md               Measured conclusions and publication checks
@@ -114,12 +120,10 @@ reproduction source for this edition.
 
 ```sh
 node analysis/portfolio/build_workbook.mjs
-python analysis/portfolio/build_report.py
 ```
 
 The workbook builder uses the `@oai/artifact-tool` 2.8.94 authoring runtime; this is a
-build-time dependency, not needed to open the XLSX or run the application. The PDF
-builder requires ReportLab (see `requirements-report.txt`). The delivered Excel
+build-time dependency, not needed to open the XLSX or run the application. The delivered Excel
 file was recalculated, formula-scanned, control-tested and rendered. PivotTable
 export is unreliable in the authoring runtime, so the workbook intentionally uses
 formula-backed views and native table filters instead of claiming PivotTables or
@@ -130,6 +134,38 @@ the repository. PDF dependencies are pinned in `requirements-report.txt`. The
 application and published CSVs do not require either artifact-building runtime.
 Run `python analysis/portfolio/verify_artifacts.py` with pypdf installed to check
 saved formulas, native chart/table counts, controls, PDF pages and file hashes.
+
+### Rebuild the notebook and its PDF
+
+The PDF is now an actual **executed Jupyter notebook export**, not a hand-drawn
+imitation. Ten cells execute with nbclient, nbconvert renders its classic HTML
+template, and headless Chromium prints that same HTML. All outputs and code/data
+hashes are saved in the `.ipynb`. The analysis contract and frozen dataset are unchanged.
+The PDF/HTML hide five input cells containing setup, plotting or repeated table
+construction; all outputs remain visible. All ten inputs remain in the notebook.
+
+Create an isolated optional environment; do not install these into the running API:
+
+```sh
+uv venv --python 3.13 var/notebook-venv
+uv pip sync --python var/notebook-venv/bin/python analysis/portfolio/requirements-report.txt
+var/notebook-venv/bin/python -m playwright install chromium
+var/notebook-venv/bin/python analysis/portfolio/build_report.py
+var/notebook-venv/bin/python analysis/portfolio/verify_artifacts.py
+```
+
+On Windows, use `var/notebook-venv/Scripts/python.exe` instead of `bin/python`.
+If Chrome/Chromium is already installed, omit the browser download and pass
+`--browser-path "/path/to/Chrome-or-Chromium"` to the builder. It starts a separate
+temporary browser, blocks HTTP(S) requests, and does not use your browser profile.
+The HTML has no scripts or external data connections. This revision was exported
+using the already-installed Google Chrome on macOS, not a downloaded browser.
+
+Open the `.ipynb` in Jupyter or VS Code with the optional environment selected as
+the Python kernel, then run all cells. For the identical paginated PDF, use the
+builder. Edit the notebook as the source of truth; rerun the builder after edits.
+PDF rendering follows the [official nbconvert HTML/WebPDF workflow](https://nbconvert.readthedocs.io/en/latest/usage.html)
+(checked 2026-10-17), with local Chromium and explicit print CSS to control pagination.
 
 To independently inspect PDF layout with Poppler:
 

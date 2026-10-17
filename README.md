@@ -18,7 +18,9 @@ is required. The finder ranks current availability; validated forecasts remain p
 
 Explore the [SQL analysis and findings](analysis/portfolio/README.md),
 [Excel workbook](outputs/portfolio-2026-10-17/Dockside_Analysis.xlsx), and
-[five-page PDF case study](output/pdf/Dockside_Case_Study.pdf).
+[notebook-style PDF case study](output/pdf/Dockside_Case_Study.pdf).
+The [executed Jupyter notebook](analysis/portfolio/Dockside_Case_Study.ipynb)
+includes the Python calculations and chart outputs behind the report.
 
 This edition analyzes 840,283 fresh unique operational reports from our real
 collection. It demonstrates SQL window functions, data-quality auditing, spatial

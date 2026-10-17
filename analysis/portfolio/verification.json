@@ -19,18 +19,28 @@
     "macros_external_links_and_connections": false,
     "native_excel_application_check": "Not verified: application did not respond"
   },
+  "notebook": {
+    "executed_code_cells": 10,
+    "execution_errors": 0,
+    "code_and_data_hashes_verified": true,
+    "offline_html_without_scripts": true
+  },
   "pdf": {
-    "pages": 5,
+    "pages": 6,
+    "format": "executed Jupyter notebook / nbconvert classic",
     "extractable_text_characters": [
-      1319,
-      1131,
-      1321,
-      1240,
-      2030
+      1892,
+      1848,
+      1706,
+      1700,
+      2062,
+      2259
     ]
   },
   "sha256": {
     "outputs/portfolio-2026-10-17/Dockside_Analysis.xlsx": "dbb69c81216e0c8341452bf336d6b0c4f263454eee2580d7ec8ff06530f515a6",
-    "output/pdf/Dockside_Case_Study.pdf": "2505cb58f3e70380dc74068b840729a9c05d18330f6801291f2070af7954fd41"
+    "output/pdf/Dockside_Case_Study.pdf": "d397ff0719ae16c1892fcc9b8f19202c0b2963b3c9b5db52c22b181e136192be",
+    "analysis/portfolio/Dockside_Case_Study.ipynb": "c94b8ef7cabb34ad7a4f915f76d16b7c30a0303086ba7e89f45fa128c565fef8",
+    "output/notebook/Dockside_Case_Study.html": "9be1a2d187e0d4217e8c8583913a6a4fea214ed13bcd843c7461c38de295f8ed"
   }
 }

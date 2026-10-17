@@ -1,0 +1,40 @@
+/* A genuine nbconvert classic notebook, with restrained print typography. */
+html, body { background: white !important; color: #222; }
+body { font-family: Arial, sans-serif; font-size: 12px; line-height: 1.45; }
+#notebook { padding: 0; }
+#notebook-container { box-shadow: none; padding: 0; width: 100%; max-width: 100%; }
+.container { width: 100%; }
+.cell { padding: 3px 0; break-inside: avoid; }
+.text_cell_render { padding: 3px 5px 5px; font-family: Arial, sans-serif; }
+.text_cell_render h1 { font-size: 25px; line-height: 1.2; margin: 5px 0 12px; }
+.text_cell_render h2 { font-size: 20px; line-height: 1.25; margin: 8px 0 12px; }
+.text_cell_render h3 { font-size: 14px; margin: 12px 0 7px; }
+.text_cell_render p, .text_cell_render li { font-size: 12px; line-height: 1.45; }
+.text_cell_render p { margin: 6px 0 10px; }
+.text_cell_render ul { padding-left: 20px; margin: 6px 0; }
+.text_cell_render a { color: #24598d; text-decoration: none; }
+.prompt { min-width: 49px; padding: 4px 5px 0 0; font-size: 10px; }
+.input_area { background: #f7f7f7; border: 1px solid #ddd; border-radius: 3px; }
+.input_area pre, .output_area pre { font-size: 9.5px; line-height: 1.38; }
+.input_area pre { padding: 7px 9px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.output_subarea { max-width: calc(100% - 49px); padding: 5px 0; }
+.output_png img, .output_svg svg { max-width: 100%; height: auto; }
+.output_area .dataframe { font-size: 11px; width: 100%; border: none; }
+.output_area .dataframe th, .output_area .dataframe td {
+  padding: 5px 7px; border: none; text-align: right; white-space: normal;
+}
+.output_area .dataframe thead { border-bottom: 1px solid #aaa; }
+.output_area .dataframe tbody tr:nth-child(odd) { background: #f5f5f5; }
+.output_area .dataframe th { font-weight: 600; }
+.output_area .dataframe tbody th { text-align: left; }
+.cell:has(.page-break) { break-before: page; }
+/* Keep the final sensitivity sentence with its table without creating an orphan page. */
+.text_cell_render p:last-child { margin-bottom: 5px; }
+.page-break { height: 0; margin: 0; }
+.anchor-link { display: none; }
+@media screen { body { max-width: 960px; margin: 24px auto; } }
+@media print {
+  .cell:has(.page-break) { page-break-before: always; }
+  .cell, .output_area, .input { overflow: visible !important; }
+  a[href]:after { content: none !important; }
+}

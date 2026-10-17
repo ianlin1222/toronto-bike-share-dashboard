@@ -12,6 +12,8 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 XLSX = ROOT / "outputs/portfolio-2026-10-17/Dockside_Analysis.xlsx"
 PDF = ROOT / "output/pdf/Dockside_Case_Study.pdf"
+NOTEBOOK = HERE / "Dockside_Case_Study.ipynb"
+HTML = ROOT / "output/notebook/Dockside_Case_Study.html"
 NS = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
 q = json.loads((HERE / "data/analysis.json").read_text())["quality"][0]
 
@@ -63,11 +65,26 @@ with ZipFile(XLSX) as package:
     assert all(ET.fromstring(package.read(p)).find("m:autoFilter", NS) is not None for p in tables)
 
 reader = PdfReader(PDF)
-assert not reader.is_encrypted and len(reader.pages) == 5
+assert not reader.is_encrypted and len(reader.pages) == 6
 texts = [page.extract_text() for page in reader.pages]
 assert all(len(t) > 500 for t in texts)
 assert "94.1%" in texts[0] and "3.4%" in texts[0]
-assert "840,283" in texts[0] and "198,740" in texts[1]
+assert "840,283" in texts[0] and "198,740" in texts[-1]
+assert all(f"{i} / 6" in text for i, text in enumerate(texts, start=1))
+notebook = json.loads(NOTEBOOK.read_text())
+code = [c for c in notebook["cells"] if c["cell_type"] == "code"]
+assert [c["execution_count"] for c in code] == list(range(1, len(code) + 1))
+assert all(o["output_type"] != "error" for c in code for o in c["outputs"])
+source_strings = ["".join(c["source"]) for c in code]
+assert (
+    hashlib.sha256(json.dumps(source_strings).encode()).hexdigest()
+    == notebook["metadata"]["dockside"]["executed_code_sha256"]
+)
+assert (
+    notebook["metadata"]["dockside"]["data_sha256"]
+    == hashlib.sha256((HERE / "data/analysis.json").read_bytes()).hexdigest()
+)
+assert "<script" not in HTML.read_text().lower()
 result = {
     "scope": "Saved XLSX/PDF structure, cached formula results and source count checks",
     "xlsx": {
@@ -81,9 +98,20 @@ result = {
         "macros_external_links_and_connections": False,
         "native_excel_application_check": "Not verified: application did not respond",
     },
-    "pdf": {"pages": len(texts), "extractable_text_characters": [len(t) for t in texts]},
+    "notebook": {
+        "executed_code_cells": len(code),
+        "execution_errors": 0,
+        "code_and_data_hashes_verified": True,
+        "offline_html_without_scripts": True,
+    },
+    "pdf": {
+        "pages": len(texts),
+        "format": "executed Jupyter notebook / nbconvert classic",
+        "extractable_text_characters": [len(t) for t in texts],
+    },
     "sha256": {
-        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in [XLSX, PDF]
+        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
+        for p in [XLSX, PDF, NOTEBOOK, HTML]
     },
 }
 (HERE / "verification.json").write_text(json.dumps(result, indent=2) + "\n")

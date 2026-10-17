@@ -44,3 +44,20 @@ def test_portfolio_hashes_and_period():
     q = json.loads((HERE / "data/analysis.json").read_text())["quality"][0]
     assert minutes == q["expected_minutes"]
     assert q["successful_minutes"] <= q["attempted_minutes"] <= minutes
+
+
+def test_portfolio_notebook_has_verified_executed_outputs():
+    notebook = json.loads((HERE / "Dockside_Case_Study.ipynb").read_text())
+    assert notebook["nbformat"] == 4
+    cells = [c for c in notebook["cells"] if c["cell_type"] == "code"]
+    assert len(cells) == 10
+    assert [c["execution_count"] for c in cells] == list(range(1, 11))
+    assert all(o["output_type"] != "error" for c in cells for o in c["outputs"])
+    assert sum("image/png" in o.get("data", {}) for c in cells for o in c["outputs"]) == 3
+    sources = ["".join(c["source"]) for c in cells]
+    proof = notebook["metadata"]["dockside"]
+    assert hashlib.sha256(json.dumps(sources).encode()).hexdigest() == proof["executed_code_sha256"]
+    assert (
+        hashlib.sha256((HERE / "data/analysis.json").read_bytes()).hexdigest()
+        == proof["data_sha256"]
+    )

@@ -78,8 +78,8 @@ These rates must not be presented as backup recommendation success.
 
 The workbook provides weekday/weekend and local-hour comparisons with report,
 date and station counts. Chart cells require at least 100 reports across three
-observed dates; the underlying table retains all cells. The PDF pools day types,
-whereas the workbook's chart follows its day-type selector.
+observed dates; the underlying table retains all cells. The notebook PDF shows
+separate weekday/weekend panels; the workbook's chart follows its day-type selector.
 
 Differences in collected dates and station mix can explain apparent hourly
 patterns. No peak-period causal effect or statistically established weekday/weekend
@@ -138,17 +138,29 @@ model performance or a completed Power BI report.
 | Source trail | 1,706 distinct status payload hashes; ordered fetch/hash fingerprint and aggregate/SQL SHA-256 manifest |
 | Aggregate checks | Station, date, hour and station-date totals reconcile; CSV/JSON/SQL hashes match |
 | Database and application tests | 65 passed against disposable PostgreSQL 18.6; two upstream deprecation warnings |
+| Notebook revision checks | 10 cells executed without errors; code/data hashes checked; 57 non-database tests passed, including the new executed-notebook regression test |
 | Spreadsheet | Seven sheets, native tables/charts, formulas, two dropdown controls; recalculation and saved-container checks |
-| Visual inspection | All seven sheet previews and all five PDF pages inspected |
+| Visual inspection | All seven sheet previews reviewed; PDF revised to an executed notebook export and all six pages inspected |
 | Native Excel | Not verified: Microsoft Excel did not respond to the native-app check; no claim of an Excel UI test |
 | Model/Power BI | Unvalidated / unverified; this release does not change those statuses |
 
 See [verification.json](verification.json) for delivered-file hashes and structural
 checks. The workbook was authored with `@oai/artifact-tool` 2.8.94; PDF generation
-uses ReportLab 4.4.9 and validation uses pypdf 6.10.0. The public aggregate files are
+now executes the Jupyter notebook using nbclient and exports nbconvert classic HTML
+through Chromium; the optional environment is hash-locked in `requirements-report.txt`.
+Validation uses pypdf 6.10.0. The public aggregate files are
 enough to regenerate this edition; raw feed evidence and credentials remain local.
 The extraction manifest records the base Git commit at extraction; its separate
 SQL hashes identify the new analysis code, which was not yet committed then.
+
+### Notebook-format revision
+
+At the user's request, the designed PDF was replaced with a cleaner notebook export:
+visible Python cells, pandas output tables, matplotlib charts and plain-language
+interpretation. The report now separates weekday/weekend panels; unsupported hours
+are blank rather than zero. The original PDF pooled day types. Neither presentation
+changes the data, aggregate metrics, support thresholds or analytical conclusions.
+The Excel workbook and SQL extracts are unchanged.
 
 ## Next decisions
 

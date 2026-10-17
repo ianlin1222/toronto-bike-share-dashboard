@@ -3,6 +3,8 @@ analysis/portfolio/data/*.csv -text whitespace=cr-at-eol
 analysis/portfolio/data/*.json text eol=lf
 analysis/portfolio/sql/*.sql text eol=lf
 analysis/portfolio/*.json text eol=lf
+analysis/portfolio/*.ipynb text eol=lf
+output/notebook/*.html text eol=lf linguist-generated=true
 *.pdf binary
 *.xlsx binary
 *.png binary
