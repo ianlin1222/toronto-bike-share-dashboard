@@ -5,6 +5,7 @@
 .map-privacy{font-size:11px}
 .map-fallback{max-height:350px;overflow:auto}
 .map-fallback a,.street-map a{text-decoration:underline}
+.map-fallback button{display:block;margin-top:8px}
 .street-map .leaflet-popup-content{font-size:13px;line-height:1.5}
 .street-map .leaflet-popup-content button{display:block;margin-top:12px}
 .street-map .leaflet-control-attribution{font-size:11px}

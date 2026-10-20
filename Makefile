@@ -3,7 +3,7 @@ SHELL := /bin/sh
 COMPOSE := python3 scripts/manage.py compose
 export UV_CACHE_DIR := $(CURDIR)/.uv-cache
 
-.PHONY: help start demo doctor stop status logs bootstrap audit lock up down migrate ingest-once collect archive test test-unit test-integration test-contract test-features test-leakage e2e-collector e2e load-test data-audit data-readiness dashboard-backfill test-reporting-sql smoke demo-check lint format
+.PHONY: help start demo doctor stop status logs bootstrap audit lock up down migrate ingest-once collect archive test test-unit test-ui test-integration test-contract test-features test-leakage e2e-collector e2e load-test data-audit data-readiness dashboard-backfill test-reporting-sql smoke demo-check lint format
 
 help:
 	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z0-9_-]+:.*## / {printf "%-24s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -59,6 +59,9 @@ test: ## Run all non-live tests in the tool container
 
 test-unit: ## Run deterministic unit tests
 	uv run --locked --no-sync pytest tests/unit
+
+test-ui: ## Run dependency-free frontend logic tests (Node.js 22+)
+	node --test tests/unit/*.test.cjs
 
 test-integration: ## Run PostgreSQL integration tests
 	uv run --locked --no-sync pytest -m integration tests/integration

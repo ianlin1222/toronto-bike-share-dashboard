@@ -125,16 +125,26 @@ See the [analysis contract and reproduction instructions](analysis/portfolio/REA
 
 ## Interactive dashboard
 
-![Dockside dashboard with availability trends and collection coverage indicators](docs/images/dashboard-overview.jpg)
+![Dockside homepage explaining the return-dock problem, analytical purpose and collection limitations](docs/images/homepage-2026-10-20.png)
 
-*Real collected observations, captured October 14, 2026—not the frozen October 17
+*Real collected observations, captured October 20, 2026—not the frozen October 17
 case-study view. Dashboard polling-observation aggregates and notebook
 source-timestamp-deduplicated reports use different denominators and can differ.*
 
 Filter dates, stations, weekday/weekend and local hour; inspect chart data, explore
-station geography and export CSVs. The separate dock finder uses fresh current
+real street maps and export CSVs. A ranking-only minimum-report control and visible
+numerators/denominators help reveal sparse support. “Show all stations” clears a
+station focus without resetting time filters. The separate dock finder uses fresh current
 availability and distance, not a validated arrival forecast. No animation or
 external map account is required. This is a **local application**, not a hosted demo.
+
+![Station explorer with OpenStreetMap streets, dock-availability markers and support-aware ranking](docs/images/station-map-2026-10-20.png)
+
+Latest maintenance verification: **68 Python tests**, including disposable
+PostgreSQL integration checks, and **8 frontend tests** passed. See the
+[maintenance findings and limitations](docs/usability-review.md#portfolio-maintenance--2026-10-20)
+and [dashboard guide](docs/dashboard.md). Run `make test-ui` for the Node frontend
+checks; software tests do not establish forecast accuracy or rider success.
 
 ## Run the live application
 
@@ -156,7 +166,8 @@ Open **http://127.0.0.1:8080/dashboard** (also the home page).
 
 1. Choose dates, a station, weekdays/weekends or a local hour; click **Apply filters**.
 2. Click a chart point or **View data** to inspect numbers. Click an hourly bar,
-   station bubble or ranking to filter. Click a KPI to see its calculation.
+   ranking to filter; on the street map, open a marker and use its filter button.
+   Click a KPI to see its calculation.
 3. Use **Export CSV** for the filtered station table, or download an individual
    chart's data from its inspector. Click **Refresh data** for new observations.
 4. Select **Find a return dock** for the existing recommendation tool at `/demo`.

@@ -33,6 +33,8 @@ jobs:
       - run: uv run ruff check src tests alembic scripts analysis/portfolio
       - run: uv run mypy
       - run: uv run pytest tests/unit tests/contract tests/e2e
+      - name: Test frontend logic (runner-provided Node.js)
+        run: node --test tests/unit/*.test.cjs
       - run: uv run pytest -m integration tests/integration
         env:
           BIKESHARE_TEST_ADMIN_URL: postgresql+psycopg://postgres:postgres@127.0.0.1:5432/postgres

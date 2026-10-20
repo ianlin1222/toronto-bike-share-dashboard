@@ -1,0 +1,47 @@
+/* Editorial hierarchy; retain existing controls and avoid a second UI framework. */
+:root{--paper:#f7f7f2;--ink:#193c36;--muted:#52675f}
+body{font-size:15px}
+.project-intro{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(240px,1fr);gap:56px;padding:48px 0 40px;border-bottom:1px solid var(--line)}
+.project-intro h1{font:500 clamp(36px,4.3vw,62px)/1.06 Georgia,"Times New Roman",serif;letter-spacing:-1.8px;margin:16px 0 22px}
+.intro-lead{font-size:16px;line-height:1.75;max-width:590px;margin-bottom:25px}
+.intro-actions{display:flex;align-items:center;flex-wrap:wrap;gap:20px}
+.action-primary{background:var(--ink);color:white;border-radius:7px;padding:12px 18px;font-size:14px;font-weight:600;display:inline-flex;gap:22px;align-items:center}
+.action-primary:hover{background:#2e5b50;text-decoration:none}
+.action-secondary{font-size:14px;text-decoration:underline;text-underline-offset:5px}
+.intro-note{align-self:center;border-left:2px solid #c7ad6a;padding:10px 0 10px 27px}
+.note-index{font-size:10px;letter-spacing:1.6px;color:var(--muted)}
+.intro-note h2{font:500 29px/1.2 Georgia,"Times New Roman",serif;margin:16px 0}
+.intro-note p{font-size:13px;line-height:1.75;max-width:320px}
+.intro-note .intro-tools{font-size:12px;margin:20px 0 7px;color:var(--ink)}
+.intro-note a{font-size:12px;text-decoration:underline;text-underline-offset:4px}
+.section-title{font-size:28px;letter-spacing:-.8px;font-weight:600}
+.section-heading h2{font-size:24px;letter-spacing:-.6px}
+.title-row{margin-top:32px}
+.panel{padding:23px;border-radius:12px;box-shadow:0 2px 4px #193c3603}
+.panel-heading p,.chart-foot,.filter-context,.live-strip,.topbar{font-size:12px}
+.panel-heading h2{font-size:18px}
+.kpi-label{font-size:10px;letter-spacing:.65px}
+.kpi small{font-size:11px;line-height:1.6}
+.kpi strong{font-size:35px}
+.nav-item{font-size:13px}
+.station-grid{grid-template-columns:minmax(0,1.45fr) minmax(280px,1fr)}
+.ranking-controls{margin-bottom:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ranking-controls label{font-size:12px;letter-spacing:0;margin:0}
+.ranking-controls label span{display:block;font-size:11px;font-weight:400}
+.ranking-controls select{margin-left:auto}
+.rank-support{display:block;font-size:11px;color:var(--muted);margin-top:4px}
+.station-focus{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:10px 13px;background:#eaf0e7;border-radius:7px;margin-bottom:12px;font-size:12px}
+.station-focus[hidden]{display:none}
+.station-focus>span:first-child{font-weight:600}
+.station-focus>span:last-child{color:var(--muted)}
+.chart svg text{font-size:11px}
+.empty-chart{line-height:1.6}
+.hero .intro{font-size:16px;line-height:1.7}
+.hero h1{font-family:Georgia,"Times New Roman",serif;font-weight:500}
+.card>a{display:inline-block;font-size:12px;margin-top:12px;line-height:1.6;text-underline-offset:3px}
+.arrival-note{line-height:1.6}
+.map-toolbar button,.filters button,.data-button{min-height:40px}
+@media(max-width:1100px){.project-intro{gap:28px}.station-grid{grid-template-columns:1fr}.intro-note{padding-left:20px}}
+@media(max-width:680px){.project-intro{grid-template-columns:1fr;padding:30px 0;gap:28px}.project-intro h1{font-size:40px;letter-spacing:-1px}.intro-lead{font-size:15px}.intro-note{border-left:0;border-top:1px solid #d7d8c5;padding:20px 0 0}.intro-note h2{font-size:25px;margin:10px 0}.intro-note p{max-width:none}.panel{padding:16px}.section-title{font-size:25px}.kpi strong{font-size:29px}.intro-actions{gap:18px}.title-actions{flex-wrap:wrap}.ranking-controls select{font-size:16px}.station-focus button{min-height:40px}.panel-heading p,.chart-foot{font-size:12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+@media(max-width:680px){.site-header{height:auto;flex-wrap:wrap;gap:12px 20px;padding-top:20px;padding-bottom:20px}.site-header .brand{flex-basis:100%;width:100%}.site-header .quiet-link{font-size:12px;min-height:32px;display:inline-flex;align-items:center}.site-header .quiet-link:last-child{margin-left:auto}}

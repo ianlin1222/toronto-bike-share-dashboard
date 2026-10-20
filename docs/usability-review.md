@@ -35,3 +35,61 @@ needs a real Windows-built report. Automatic archival/request-retention scheduli
 full credential/ACL recovery, offsite backups, overnight laptop uptime and 24-hour
 coverage have not been accepted. The app is usable as a local current-availability
 recommender.
+
+## Portfolio maintenance — 2026-10-20
+
+Checkpoint `02b6d73` preserves the street-map and analyst README version before
+this maintenance pass. The review covered dashboard/finder behavior, analytical
+wording, responsive layout, startup safeguards, tests and publication hygiene.
+It is a scoped review, not proof that every production risk is resolved.
+
+| Finding | Fix and rationale |
+| --- | --- |
+| The page started with metrics before explaining the user problem | Added a problem-first introduction, current-dock and analysis paths, plus direct links to the executed notebook and source |
+| Inspector rounded all numbers to one decimal, obscuring fractions and coordinates | Preserve raw numeric precision; explain fractions versus percentages and missing values |
+| Ranking and its data table had different tie-breaks | One tested deterministic rule for both, with support count and station ID tie-breaks |
+| Sparse stations could dominate a ranking without visible support | Added a ranking-only 100/500/all minimum and full/usable counts; counts are explicitly not independent samples |
+| Historical stations absent from the current catalogue could not be focused | Resolve IDs against the historical result as well as the current catalogue |
+| Getting back from a station focus required resetting unrelated filters | Added “Show all stations,” preserving the time selection |
+| A current strip could retain live-looking numbers indefinitely | Replace current counts with a refresh warning after two minutes; keep historical evidence unchanged |
+| A map initialization exception could interrupt the rest of rendering | Catch the failure and provide coordinate links and station actions; no silent blank map |
+| Finder wording implied an arrival assessment in baseline mode | Explain that changing ETA does not change current-availability ranking and the alternative is not a later-arrival prediction |
+| Coordinate privacy wording implied only local handling | Disclose rounded live-request retention and the external map services' viewed-area exposure |
+| Frontend behavior was not exercised in CI | Added `make test-ui`, eight Node tests and a CI frontend step; API tests check the new assets and copy |
+
+Design follows the existing warm green palette, with an editorial serif headline,
+more readable labels, restrained dividers, improved spacing and mobile wrapping.
+It adds no animation, fabricated testimonials, performance claims or new service.
+The Sites skill's local-repository route guided purpose-first hierarchy and
+responsive visual checks; no Site hosting was created.
+
+Verification:
+
+- 68 Python tests passed against isolated PostgreSQL 18.6, including migrations,
+  idempotency, restricted roles, archive reconciliation, portfolio SQL, feature
+  leakage and API contracts. Two upstream TestClient deprecation warnings remain.
+- 59 non-database tests passed locally; eight Node frontend tests passed.
+- Ruff, strict mypy (39 source files) and Git whitespace checks passed.
+- Fixture browser checks covered 390 px and 1440 px viewports, recommendations,
+  street maps/location links, ranking minimum, station focus/reset and precise
+  inspector values. These are software checks, not real-world performance.
+- Live browser checks on port 8080 confirmed the new homepage, real-history
+  warning, street tiles and 1,076 mapped stations. Homepage and station-explorer
+  screenshots are in `docs/images/`; no browser console errors were recorded
+  during this check. These are runtime observations, not frozen study metrics.
+- A cached test image initially contained an older launcher; mounting the current
+  scripts/migrations alongside source and tests resolved that test-harness mismatch.
+  The successful run tested current repository code, without rebuilding an image.
+
+Operating limitations remain explicit: forecasting/model activation and a verified
+Windows Power BI artifact are pending. Collection gaps and data-quality limitations
+in the frozen study have not been erased. No new performance result was generated.
+Automatic retention scheduling, offsite recovery and public hosting are not claimed.
+
+Disk availability was approximately 5–7 GiB during this session, below the existing
+10 GiB startup/build safety threshold. The eight changed static assets were copied
+into the running API container; no production database or collector restart was
+needed. **This updates the current container, not its cached image.** After freeing
+enough disk space, run `make start` to build the committed version into the images.
+Do not delete the PostgreSQL volume. Test database shutdown is separate from live
+services. Secrets, raw data and rider request logs are excluded from the commit.

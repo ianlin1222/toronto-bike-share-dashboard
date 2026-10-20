@@ -6,10 +6,11 @@
   <title>Dockside · Bike Share Toronto dashboard</title>
   <meta name="description" content="Explore observed Toronto dock availability by station, date, and time. Interactive charts, transparent data coverage, and a live dock finder.">
   <link rel="stylesheet" href="/assets/dashboard.css">
+  <link rel="stylesheet" href="/assets/refinements.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="stylesheet" href="/assets/maps.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
-  <script src="/assets/maps.js" defer></script><script src="/assets/dashboard.js" defer></script>
+  <script src="/assets/maps.js" defer></script><script src="/assets/dashboard-logic.js" defer></script><script src="/assets/dashboard.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to dashboard</a>
@@ -21,9 +22,13 @@
   <div class="sidebar-bottom">An independent Toronto project<br><span>Local dashboard · v0.2.0</span></div>
 </aside>
 <main id="main">
-  <header class="topbar"><span>WORKSPACE <span class="slash">/</span> Availability analytics</span><a href="/demo">Find a dock <span>↗</span></a></header>
+  <header class="topbar"><span>TORONTO <span class="slash">/</span> An independent data project</span><a href="https://github.com/ianlin1222/toronto-bike-share-dashboard" target="_blank" rel="noopener noreferrer">Explore the project ↗</a></header>
+  <section class="project-intro" aria-labelledby="project-question">
+    <div class="intro-copy"><p class="eyebrow">THE LAST PART OF YOUR RIDE MATTERS</p><h1 id="project-question">A good ride needs<br>a place to end.</h1><p class="intro-lead">Arriving at a full station means finding somewhere else to return your bike. Dockside helps you explore where that pressure appears—and check nearby docks before you go.</p><div class="intro-actions"><a class="action-primary" href="/demo">Find a return dock <span aria-hidden="true">↗</span></a><a class="action-secondary" href="#overview">Explore the observations ↓</a></div></div>
+    <aside class="intro-note"><span class="note-index">A NOTE ON THE DATA</span><h2>A clear view.<br>Not a guarantee.</h2><p>The dashboard shows collected station reports. The finder uses fresh availability now, not a prediction of what you’ll find later.</p><p class="intro-tools">SQL · Python · Excel · Jupyter</p><a href="https://github.com/ianlin1222/toronto-bike-share-dashboard/blob/main/analysis/portfolio/Dockside_Case_Study.ipynb" target="_blank" rel="noopener noreferrer">Read the analytical case study ↗</a></aside>
+  </section>
   <section id="overview">
-    <div class="title-row"><div><p class="eyebrow">THE NETWORK, AT A GLANCE</p><h1>System overview<span class="title-dot">.</span></h1><p class="subtitle">Explore when and where there’s room to return a bike.</p></div><div class="title-actions"><button id="export" disabled>↓ Export CSV</button><button class="dark" id="refresh">↻ Refresh data</button></div></div>
+    <div class="title-row"><div><p class="eyebrow">01 / OBSERVE</p><h2 class="section-title">System overview</h2><p class="subtitle">Choose a period. Inspect the pattern. Check how much was actually observed.</p></div><div class="title-actions"><button id="export" disabled>↓ Export CSV</button><button class="dark" id="refresh">↻ Refresh data</button></div></div>
     <div id="notice" class="banner" role="status">Connecting to your collected data…</div>
     <form id="filters" class="filters" aria-label="Dashboard filters">
       <div><label for="start">From</label><input type="date" id="start" required></div>
@@ -34,6 +39,7 @@
       <button type="submit" class="dark" id="apply">Apply filters</button><button type="button" id="reset" aria-label="Reset all dashboard filters">Reset</button>
     </form>
     <p class="filter-context" id="filter-context">Dates and hours use America/Toronto. Select up to 31 days.</p>
+    <div id="station-focus" class="station-focus" hidden><span id="station-focus-label"></span><button id="clear-station" type="button">Show all stations</button><span>Other filters stay selected.</span></div>
     <div class="error" id="error" role="alert" hidden></div>
     <div class="live-strip"><span class="status-dot" id="live-dot"></span><strong id="live-title">Checking live reports</strong><span id="live-detail">Current conditions are separate from the historical filters.</span><span class="updated" id="updated"></span></div>
     <div id="dashboard-content" aria-busy="true">
@@ -44,14 +50,14 @@
         <button class="kpi" data-metric="coverage"><span class="kpi-label">COLLECTION COVERAGE <span>↗</span></span><strong id="kpi-coverage">—</strong><small id="kpi-polls">successful / expected system polls</small><span class="kpi-stripe muted"></span></button>
       </div>
       <div class="chart-grid trend-grid">
-        <article class="panel"><div class="panel-heading"><div><p class="eyebrow">OVER TIME</p><h2>Dock availability trend</h2><p>Observation-weighted average · missing hours stay blank</p></div><button class="data-button" data-table="timeline">View data</button></div><div id="trend" class="chart" aria-label="Dock availability trend"></div><p class="chart-foot" id="trend-foot">Hover or focus a point for exact values.</p></article>
+        <article class="panel"><div class="panel-heading"><div><p class="eyebrow">OVER TIME</p><h2>Average docks over time</h2><p>Observation-weighted average · missing hours stay blank</p></div><button class="data-button" data-table="timeline">View data</button></div><div id="trend" class="chart" aria-label="Average reported usable docks over time"></div><p class="chart-foot" id="trend-foot">Hover or focus a point for exact values.</p></article>
         <article class="panel"><div class="panel-heading"><div><p class="eyebrow">DAILY RHYTHM</p><h2>Availability by hour</h2><p>Toronto local time · click a bar to filter</p></div><button class="data-button" data-table="hourly">View data</button></div><div id="hourly" class="chart" aria-label="Average available docks by local hour"></div><p class="chart-foot">Counts describe inventory, not pickups or returns.</p></article>
       </div>
       <section id="station-explorer">
-        <div class="section-heading"><div><p class="eyebrow">A CLOSER LOOK</p><h2>Explore the stations</h2></div><p>Click a station on either chart to focus the whole dashboard.</p></div>
+        <div class="section-heading"><div><p class="eyebrow">02 / EXPLORE</p><h2>Explore the stations</h2></div><p>Open a map marker for details and a filter button, or select a station in the ranking.</p></div>
         <div class="chart-grid station-grid">
           <article class="panel"><div class="panel-heading"><div><h2>Where docks are available</h2><p>Colour = observed availability · size = average docks</p></div><button class="data-button" data-table="stations">View data</button></div><div id="station-map"></div><div class="map-legend"><span><i class="dot gold"></i>Less often</span><span class="gradient"></span><span><i class="dot teal"></i>More often</span><small>Street map · current-known station locations</small></div><div id="station-detail" class="station-detail" aria-live="polite">Select a station for details and a location link.</div></article>
-          <article class="panel"><div class="panel-heading"><div><h2>Stations to keep an eye on</h2><p>Highest full-dock observation share · not a forecast</p></div><button class="data-button" data-table="rankings">View data</button></div><div id="rankings" class="rankings"></div><p class="chart-foot">Among observed stations; sparse samples can be misleading.</p></article>
+          <article class="panel"><div class="panel-heading"><div><h2>Stations to keep an eye on</h2><p>Highest zero-dock report share · not a forecast</p></div><button class="data-button" data-table="rankings">View data</button></div><div class="ranking-controls"><label for="ranking-minimum">Minimum usable reports <span>(ranking only)</span></label><select id="ranking-minimum"><option value="100" selected>100 reports</option><option value="500">500 reports</option><option value="0">All sample sizes</option></select></div><div id="rankings" class="rankings"></div><p class="chart-foot">Sample size is shown with each station. Adjacent reports are correlated; a large count does not establish complete coverage.</p></article>
         </div>
         <article class="panel heat-panel"><div class="panel-heading"><div><h2>The week, hour by hour</h2><p>Share of fresh return-capable observations with at least one dock · click a cell to explore</p></div><button class="data-button" data-table="heatmap">View data</button></div><div id="heatmap" class="heatmap"></div><p class="chart-foot">Monday → Sunday · 00:00 → 23:00 · grey cells have no usable observations. DST repeated hours are combined here, but kept distinct in the trend.</p></article>
         <article class="panel table-panel"><div class="panel-heading"><div><h2>Station data</h2><p id="table-count">Your filtered results, ready to inspect.</p></div><input type="search" id="table-search" placeholder="Search these results…" aria-label="Search station table"></div><div class="table-scroll"><table><thead><tr><th><button data-sort="name">Station ↕</button></th><th><button data-sort="average_docks">Avg. docks ↕</button></th><th><button data-sort="availability_rate">Dock available ↕</button></th><th><button data-sort="observations">Observations ↕</button></th><th>Fresh reports</th><th>Explore</th></tr></thead><tbody id="station-rows"></tbody></table></div><div class="pagination"><button id="previous">← Previous</button><span id="page-label">Page 1</span><button id="next">Next →</button></div></article>

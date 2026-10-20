@@ -11,6 +11,10 @@ collection subsequently refreshes the current and previous two hours.
 The opening range covers available history, capped at 31 Toronto-local calendar
 days ending at the latest aggregated hour. Choose From/Through, Station, Days and
 Time of day, then **Apply filters**. **Reset** returns to the opening range.
+The introduction explains the return-dock problem and provides two paths:
+**Find a return dock** for current options, or **Explore the observations** for
+historical analysis. **Show all stations** clears a station focus while preserving
+the selected dates, weekday/weekend and local hour.
 **Refresh data** fetches again with the selected filters. There is no autoplay,
 animation, automatic refresh or routing service. Street maps now require internet
 access to OpenStreetMap tiles and the pinned Leaflet CDN; no API key is required.
@@ -18,10 +22,10 @@ access to OpenStreetMap tiles and the pinned Leaflet CDN; no API key is required
 | View | What it shows | Manual interaction |
 |---|---|---|
 | KPI cards | Weighted average docks, observed dock availability, station count and collection coverage | Click for definitions, calculation and counts |
-| Dock availability trend | Hourly average reported usable docks | Hover/focus for values; click a point or View data |
+| Average docks over time | Hourly average reported usable docks | Hover/focus for values; click a point or View data |
 | Availability by hour | Aggregated Toronto-local hourly pattern | Click a bar to filter that hour |
 | Station street map | OpenStreetMap streets and landmarks, current-known coordinates; colour = availability; size = average docks | Pan/zoom; select a marker for details/location link, then use its filter button |
-| Station ranking | Highest observed share of zero-dock reports | Click a station to filter; sample counts available in View data |
+| Station ranking | Highest observed share of zero-dock reports | Choose minimum usable reports; inspect visible numerator/denominator; click a station to filter |
 | Week/hour heatmap | Availability by weekday and local hour | Click a nonempty cell for its actual counts |
 | Station table | Filtered station aggregates | Search, sort, paginate, focus a station or export CSV |
 | Data health | Successful scheduled polls / expected polls, including offline gaps | Click a day or View data; inspect source and refresh timestamps |
@@ -34,6 +38,16 @@ The current-report strip is separate from historical filters. Its numbers descri
 the last manual refresh, not continuously updated availability. Date/day/hour
 filters do not apply to that strip; station selection does. For return guidance,
 open **Find a return dock** (`/demo`), which retains the original freshness rules.
+After two minutes without a new response, current counts are replaced with a
+refresh warning; this does not change historical charts or assert a collector
+failure. The data inspector preserves numeric precision and explains that rates
+are fractions from zero to one, while chart labels show percentages.
+
+The ranking-only minimum defaults to 100 usable reports, with options for 500 or
+all available reports. It affects only the eight-row ranking and its data inspector,
+not other charts or the station-table CSV. Ties use support count (descending),
+then station ID. A report count is not a count of independent days; this exploratory
+control is separate from the frozen notebook's 100-report / five-date rule.
 
 ## What the numbers mean
 
@@ -140,8 +154,9 @@ analysis and rebalancing counts are deliberately not reproduced. This project's
 GBFS snapshots cannot substantiate those measures. No reference-video number is
 used as project data.
 
-The dashboard is local FastAPI-served HTML/CSS/JavaScript, with no new frontend
-framework or package dependency. Power BI authoring, live model orchestration and
+The dashboard is local FastAPI-served HTML/CSS/JavaScript, with no frontend build
+framework. Leaflet is a pinned browser dependency; street tiles are an external
+service. Power BI authoring, live model orchestration and
 held-out forecast evidence remain separately pending, as recorded in `PLANS.md`.
 
 ## Verification and maintenance
@@ -151,6 +166,10 @@ including null denominators, weighted aggregation, DST date bounds, filters,
 default range limits, provenance isolation, SQL permissions and idempotency.
 Browser checks cover desktop/mobile, filters, chart inspection, CSV download,
 empty results and the original finder. Synthetic-mode checks are not live evidence.
+`make test-ui` runs eight dependency-free Node tests for ranking, historical station
+selection, precision, elapsed-time warnings, map rendering and failure handling.
+See the [October maintenance review](usability-review.md#portfolio-maintenance--2026-10-20)
+for the latest verification and remaining operating limitations.
 
 For local operation use `make status`, `make logs`, `make doctor`, and `make stop`.
 Watch free disk space: one-minute historical collection grows even while the UI is

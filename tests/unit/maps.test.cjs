@@ -8,7 +8,7 @@ const source = fs.readFileSync(path.join(__dirname, '../../src/bikeshare/api/sta
 class Element {
   constructor() { this.children = []; this.attrs = {}; this.listeners = {}; }
   append(...children) { this.children.push(...children); }
-  replaceChildren() { this.children = []; }
+  replaceChildren(...children) { this.children = children; }
   setAttribute(key, value) { this.attrs[key] = value; }
   addEventListener(key, fn) { this.listeners[key] = fn; }
 }
@@ -36,7 +36,7 @@ function setup(withLibrary = true) {
   };
   const window = withLibrary ? {L} : {};
   vm.runInNewContext(source, {window, L, document:{createElement:() => new Element()}, setTimeout, clearTimeout});
-  return {api:window.DocksideMaps, host:new Element(), markers, events, maps};
+  return {api:window.DocksideMaps, host:new Element(), markers, events, maps, L};
 }
 const point = {lat:43.6532, lon:-79.3832, label:'<img src=x onerror=alert(1)> station'};
 test('missing library gives safe text and explicit location links; invalid coordinates excluded', () => {
@@ -67,4 +67,14 @@ test('tile failures remain disclosed through batch completion and recover on new
   assert.match(host.children[2].textContent, /could not load/);
   events.loading(); events.load();
   assert.match(host.children[2].textContent, /Street map loaded/);
+});
+test('map initialization failure does not prevent the data UI from rendering', () => {
+  const {api,host,L} = setup();
+  L.map=()=>{throw new Error('simulated renderer failure');};
+  let selected=false;
+  assert.doesNotThrow(()=>api.render(host,[{...point,action:()=>{selected=true;}}]));
+  assert.match(host.children[0].textContent,/Map unavailable/);
+  assert.match(host.children[1].children[0].children[0].href,/openstreetmap.org/);
+  host.children[1].children[0].children[1].onclick();
+  assert.ok(selected);
 });

@@ -31,6 +31,7 @@ function card(title,station){
   const node=el('article',null,'card '+(title==='Alternative'?'alternative':''));const label=el('div',null,'card-label');label.append(el('span',title[0],'card-marker'),document.createTextNode(title));node.append(label);
   if(!station){node.append(el('h3','Only one eligible station'),el('p','Try a larger radius to find an alternative.','hint'));return node;}
   node.append(el('h3',station.name||`Station ${station.station_id}`));const metric=el('p',String(station.available_docks_now??'—'),'dock-metric');metric.append(el('span','docks available now'));node.append(metric,el('p',`${station.distance_m.toLocaleString()} m from your destination`,'card-distance'));const age=el('p',null,'card-age');age.dataset.reported=station.source_last_reported;age.textContent=`Reported ${ageText(station.source_last_reported)} ago · accepting returns`;node.append(age);
+  node.append(DocksideMaps.locationLink(station));
   if(station.forecast_probability!=null)node.append(el('small',`${Math.round(station.forecast_probability*100)}% forecast at arrival`));
   return node;
 }

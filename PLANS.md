@@ -252,3 +252,22 @@ the final export has no orphan paragraphs or clipped charts/tables.
 
 Rebuild with `python analysis/portfolio/build_report.py` in the documented optional
 notebook environment, then run `python analysis/portfolio/verify_artifacts.py`.
+
+## Publication maintenance (2026-10-20)
+
+- Preserved the pre-maintenance map/README version in checkpoint `02b6d73`.
+- Added the problem-first homepage, refined responsive typography, ranking-only
+  minimum-report control and a station-focus reset. Fixed inspector precision,
+  ranking/table consistency, historical station selection, aging current counts,
+  map initialization fallbacks and baseline ETA/privacy wording.
+- Verification: 68 Python tests against a disposable PostgreSQL database; eight
+  Node frontend tests; fixture browser checks on mobile and desktop. The CI workflow
+  now includes frontend tests. Detailed findings: `docs/usability-review.md`.
+- Frozen SQL/Excel/notebook outputs and analytical findings were not changed.
+  Data/model evidence gates and Power BI status remain pending, independently of UI.
+- Local static assets updated without restarting live ingestion. Full image rebuild
+  deferred because available disk remains below the 10 GiB safety gate. The current
+  container update must be rebuilt into an image before container recreation.
+- Next operating action: free sufficient disk, run `make start`, then verify
+  `make doctor` / `make smoke`; maintain collection continuity and investigate
+  source-timestamp quality before expanding any performance claim.

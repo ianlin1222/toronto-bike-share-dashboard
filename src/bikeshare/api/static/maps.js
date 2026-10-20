@@ -14,7 +14,7 @@ window.DocksideMaps = (() => {
     link.rel = 'noopener noreferrer';
     return link;
   }
-  function render(host, points, onInspect) {
+  function renderMap(host, points, onInspect) {
     const previous = instances.get(host);
     if (previous) { clearTimeout(previous.timer); previous.map.remove(); instances.delete(host); }
     host.replaceChildren();
@@ -34,7 +34,12 @@ window.DocksideMaps = (() => {
       const list = node('div'); list.className = 'map-fallback';
       for (const point of valid) {
         const row = node('p', `${point.label} · ${point.lat.toFixed(5)}, ${point.lon.toFixed(5)} `);
-        row.append(locationLink(point)); list.append(row);
+        row.append(locationLink(point));
+        if(point.action) {
+          const filter = node('button', 'Filter dashboard to this station');
+          filter.type = 'button'; filter.onclick = point.action; row.append(filter);
+        }
+        list.append(row);
       }
       host.append(notice, list, privacy);
       return;
@@ -100,6 +105,30 @@ window.DocksideMaps = (() => {
     }
     fit.onclick = showAll;
     map.invalidateSize(); showAll();
+  }
+  function render(host, points, onInspect) {
+    try { renderMap(host, points, onInspect); }
+    catch {
+      const previous = instances.get(host);
+      if(previous) {
+        clearTimeout(previous.timer);
+        try { previous.map.remove(); } catch { /* Keep the data UI usable. */ }
+        instances.delete(host);
+      }
+      host.replaceChildren(node('p', 'Map unavailable. The station data and results are still usable. Reload to retry the map.'));
+      const list = node('div'); list.className = 'map-fallback';
+      for(const point of points) {
+        if(!Number.isFinite(point.lat)||!Number.isFinite(point.lon)||point.lat<43.45||point.lat>43.95||point.lon< -79.8||point.lon> -79)continue;
+        const row = node('p', `${point.label} · ${point.lat.toFixed(5)}, ${point.lon.toFixed(5)} `);
+        row.append(locationLink(point));
+        if(point.action) {
+          const filter = node('button', 'Filter dashboard to this station');
+          filter.type = 'button'; filter.onclick = point.action; row.append(filter);
+        }
+        list.append(row);
+      }
+      host.append(list);
+    }
   }
   return {render, locationLink};
 })();
