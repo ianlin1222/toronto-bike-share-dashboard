@@ -271,3 +271,19 @@ notebook environment, then run `python analysis/portfolio/verify_artifacts.py`.
 - Next operating action: free sufficient disk, run `make start`, then verify
   `make doctor` / `make smoke`; maintain collection continuity and investigate
   source-timestamp quality before expanding any performance claim.
+
+## Descriptive dashboard expansion (2026-10-20)
+
+- Added **Deeper analysis**: station full-share distribution; average-dock/full-share
+  scatter; count-weighted weekday/weekend hourly profile; reconciled observation
+  quality groups. New views reuse existing integer aggregates without DB mutations.
+- Added station-support controls, explicit exclusions, explanatory captions,
+  analytical inspectors/CSV, keyboard drill-down and a chart presentation guide.
+  Updated ranking calculations to use raw counts before rounding consistently.
+- Verified 69 Python tests (including disposable PostgreSQL) and 14 frontend tests;
+  fixture browser interactions and mobile/desktop layouts; real-response count
+  reconciliation. Data, feature/model evidence and the frozen study are unchanged.
+- User subsequently authorized committing and pushing this expansion to the
+  existing GitHub repository. Verify the resulting commit on remote main and CI.
+  The running API's static assets were refreshed, but image rebuild still requires
+  sufficient disk space. No production DB/collector restart or data removal occurred.

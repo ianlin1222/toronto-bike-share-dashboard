@@ -1,0 +1,18 @@
+.analysis-lead{max-width:790px;font-size:15px;line-height:1.7;margin-bottom:12px}
+.analysis-context{padding:10px 13px;border-left:3px solid #c7ad6a;background:#f0f2e9;font-size:12px;line-height:1.6}
+.analysis-filter-link{font-size:12px;text-decoration:underline;text-underline-offset:4px}
+.analysis-controls{display:flex;align-items:center;flex-wrap:wrap;gap:12px 20px;margin:18px 0 22px}
+.analysis-controls label{font-size:12px;margin:0}.analysis-controls label span{display:block;font-size:11px;letter-spacing:0;font-weight:400}
+.analysis-controls p{flex-basis:100%;font-size:12px;margin:0;line-height:1.6}
+.analysis-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
+.analysis-panel{display:flex;flex-direction:column}.analysis-panel .panel-heading{min-height:65px}
+.analysis-chart{overflow-x:auto;overflow-y:hidden;min-height:0}.analysis-chart svg{height:auto;aspect-ratio:540/300;min-width:430px;overflow:visible}
+.analysis-chart svg text{font-size:13px}.analysis-finding{background:#f4f6f0;border-radius:5px;border-left:2px solid #c7d5c1;padding:11px 13px;font-size:12px;line-height:1.65;margin:16px 0 0;min-height:72px}
+.analysis-panel .chart-foot{line-height:1.7;margin-top:12px}
+.analysis-legend{display:flex;flex-wrap:wrap;gap:20px;font-size:12px;color:var(--muted);margin:0 0 12px}
+.analysis-legend>span{display:inline-flex;align-items:center;gap:8px}.legend-line{display:inline-block;width:23px;border-top:3px solid #237769}.legend-line.weekend{border-color:#aa7536;border-top-style:dashed}
+.quality-chart{display:grid;gap:8px}.quality-row{display:block;width:100%;text-align:left;padding:11px 12px;background:#fafbf8;border:1px solid #e8ece4}
+.quality-label{display:flex;justify-content:space-between;gap:10px;font-size:12px}.quality-label strong{font-variant-numeric:tabular-nums}.quality-track{display:block;height:7px;background:#e8ece4;border-radius:3px;overflow:hidden;margin:9px 0 5px}.quality-fill{display:block;height:100%}.quality-row small{display:block;color:var(--muted);font-size:11px;line-height:1.5}
+.mobile-chart-hint{display:none;font-size:12px;line-height:1.6}
+@media(max-width:1100px){.analysis-grid{grid-template-columns:1fr}.analysis-panel .panel-heading{min-height:0}}
+@media(max-width:600px){.mobile-chart-hint{display:block}.analysis-controls{gap:10px}.analysis-controls select{font-size:16px}.analysis-grid{gap:14px}.quality-label{font-size:12px}.analysis-finding{min-height:0}.analysis-panel .data-button{min-height:40px}.analysis-chart:focus-visible{outline:2px solid #287b69;outline-offset:-2px}}

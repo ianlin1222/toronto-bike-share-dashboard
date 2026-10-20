@@ -138,10 +138,22 @@ station focus without resetting time filters. The separate dock finder uses fres
 availability and distance, not a validated arrival forecast. No animation or
 external map account is required. This is a **local application**, not a hosted demo.
 
+The **Deeper analysis** section adds four complementary views: station full-share
+distribution, average docks versus full-share scatter, weekday/weekend hourly
+comparison, and an observation-quality breakdown. Each has an explained denominator,
+main-filter context, an inspectable table and CSV export. Support thresholds and
+missing outcomes remain visible. These demonstrate descriptive analysis—not causal
+effects, trip demand or validated prediction. See the [chart formulas and interview
+walkthrough](docs/dashboard.md#deeper-analysis--what-the-average-hides).
+Preview the [distribution and scatter](docs/images/deeper-analysis-2026-10-20.png)
+and [group comparison and quality breakdown](docs/images/analysis-quality-2026-10-20.png).
+These screenshots use the live dashboard's selected September 20–October 20 window,
+not the frozen notebook window.
+
 ![Station explorer with OpenStreetMap streets, dock-availability markers and support-aware ranking](docs/images/station-map-2026-10-20.png)
 
-Latest maintenance verification: **68 Python tests**, including disposable
-PostgreSQL integration checks, and **8 frontend tests** passed. See the
+Latest local verification: **69 Python tests**, including disposable
+PostgreSQL integration checks, and **14 frontend tests** passed. See the
 [maintenance findings and limitations](docs/usability-review.md#portfolio-maintenance--2026-10-20)
 and [dashboard guide](docs/dashboard.md). Run `make test-ui` for the Node frontend
 checks; software tests do not establish forecast accuracy or rider success.
