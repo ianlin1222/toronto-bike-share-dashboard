@@ -34,10 +34,19 @@ function card(title,station){
   if(station.forecast_probability!=null)node.append(el('small',`${Math.round(station.forecast_probability*100)}% forecast at arrival`));
   return node;
 }
-function svg(tag, attrs, text){const node=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [key,value] of Object.entries(attrs))node.setAttribute(key,String(value));if(text)node.textContent=text;return node;}
-function drawDiagram(body,destination){const canvas=$('diagram');canvas.replaceChildren();const stations=[body.primary,body.alternative].filter(Boolean);if(!stations.length)return;const project=s=>[(s.lon-destination.lon)*111320*Math.cos(destination.lat*Math.PI/180),(s.lat-destination.lat)*111320];const points=stations.map(project);const maxX=Math.max(100,...points.map(([x])=>Math.abs(x))),maxY=Math.max(100,...points.map(([,y])=>Math.abs(y)));const scale=Math.min(215/maxX,73/maxY);canvas.append(svg('circle',{cx:280,cy:110,r:74,fill:'none',stroke:'#d3ddcb','stroke-dasharray':'3 6'}),svg('circle',{cx:280,cy:110,r:38,fill:'none',stroke:'#dce4d4'}),svg('text',{x:529,y:22,fill:'#688061','font-size':10,'text-anchor':'middle'},'N ↑'));
-  const crowded=points.length>1&&Math.hypot((points[0][0]-points[1][0])*scale,(points[0][1]-points[1][1])*scale)<55;
-  stations.forEach((station,index)=>{const [dx,dy]=points[index];const x=280+dx*scale,y=110-dy*scale;const nearDestination=Math.hypot(dx*scale,dy*scale)<28;const labelX=x+(crowded||nearDestination?(index?32:-32):0),labelY=y+(nearDestination?-26:0);canvas.append(svg('line',{x1:280,y1:110,x2:x,y2:y,stroke:'#759270','stroke-width':1,'stroke-dasharray':'4 4'}),svg('circle',{cx:x,cy:y,r:3,fill:'#174d40'}),svg('line',{x1:x,y1:y,x2:labelX,y2:labelY,stroke:'#759270','stroke-width':1}),svg('circle',{cx:labelX,cy:labelY,r:15,fill:index?'#e0e8d7':'#174d40',stroke:'#174d40'}),svg('text',{x:labelX,y:labelY+4,'text-anchor':'middle',fill:index?'#174d40':'white','font-size':11,'font-weight':700},index?'A':'P'),svg('text',{x:labelX,y:labelY+31,'text-anchor':'middle',fill:'#4e6c53','font-size':10},`${station.distance_m} m`));});canvas.append(svg('circle',{cx:280,cy:110,r:6,fill:'#b87938',stroke:'white','stroke-width':2}));$('diagram-wrap').hidden=false;}
+function drawDiagram(body,destination){
+  $('diagram-wrap').hidden=false;
+  const points=[{...destination,label:'Your destination',badge:'D'}];
+  for(const [station,badge,title] of [[body.primary,'P','Primary'],[body.alternative,'A','Alternative']]){
+    if(station) {
+      const label=`${title}: ${station.name} · ${station.available_docks_now??'Unknown'} docks now · ${station.distance_m} m straight-line`;
+      const coincident=points.find(p=>p.lat===station.lat&&p.lon===station.lon);
+      if(coincident){coincident.badge+=`/${badge}`;coincident.label+=` · ${label}`;}
+      else points.push({lat:station.lat,lon:station.lon,badge,label});
+    }
+  }
+  DocksideMaps.render($('diagram'),points);
+}
 function showResult(body,destination){
   latest=body;dirty=false;$('output').replaceChildren();$('mode-notice').hidden=false;$('mode-notice').className='notice '+(body.mode==='fixture_demo'?'':'live');$('mode-notice').textContent=body.mode==='fixture_demo'?'Sample data · fictional availability for demonstration only.':body.partial_feed?'Some station updates are missing. These options have fresh individual reports.':'Available now · selected by distance. A dock at your arrival time is not guaranteed.';
   if(body.primary){const cards=el('div',null,'cards');cards.append(card('Primary',body.primary),card('Alternative',body.alternative));$('output').append(cards);drawDiagram(body,destination);}else{const empty=el('div',null,'empty');empty.append(el('h3','No suitable docks in this radius'),el('p','Nearby stations may be full, closed, or missing a fresh report. Try expanding your search.'));if(Number($('radius').value)<2000){const button=el('button','Search within 2 km');button.type='button';button.onclick=()=>{$('radius').value='2000';$('search').requestSubmit();};empty.append(button);}$('output').append(empty);}

@@ -42,25 +42,12 @@ function trend(){
 function hourly(){if(!data.hourly.some(r=>r.average_docks!=null))return empty($('hourly'));const chart=canvas('hourly',420);const max=Math.max(1,...data.hourly.map(v=>v.average_docks||0))*1.12;const a=axes(chart,420,235,max,'Avg. docks');const byHour=new Map(data.hourly.map(r=>[r.local_hour,r]));for(let hour=0;hour<24;hour++){const row=byHour.get(hour),x=a.l+hour*a.w/24;if(row?.average_docks!=null){const bar=svg('rect',{x:x+2,y:a.y(row.average_docks),width:a.w/24-4,height:Math.max(2,a.t+a.h-a.y(row.average_docks)),rx:2,fill:hour>=7&&hour<=9||hour>=16&&hour<=18?'#dbb36d':'#4f9284'});actionable(bar,`${hour}:00 · ${number(row.average_docks)} average docks. Filter this hour.`,()=>{$('hour').value=String(hour);load(true);});chart.append(bar);}if(hour%4===0)chart.append(svg('text',{x:x+6,y:226,'text-anchor':'middle'},String(hour).padStart(2,'0')));}chart.append(svg('text',{x:405,y:226,'text-anchor':'end'},'23'));}
 function map(){
   const values=data.stations.filter(r=>r.map_eligible),excluded=data.stations.length-values.length;
-  $('station-detail').textContent=`${values.length.toLocaleString()} plotted stations${excluded?` · ${excluded} omitted: missing or out-of-Toronto coordinates (still in totals/table)`:''}. Hover or focus for details; click to filter.`;
-  if(!values.length)return empty($('station-map'),'No Toronto coordinates are available for this selection. Observations remain in the station table.');
-  const chart=canvas('station-map',650,300);
-  const minLat=Math.min(...values.map(v=>v.lat)),maxLat=Math.max(...values.map(v=>v.lat)),minLon=Math.min(...values.map(v=>v.lon)),maxLon=Math.max(...values.map(v=>v.lon));
-  const midLat=(minLat+maxLat)/2,midLon=(minLon+maxLon)/2,cos=Math.cos(midLat*Math.PI/180);
-  const scale=Math.min(560/Math.max(.015,(maxLon-minLon)*cos),215/Math.max(.012,maxLat-minLat));
-  const x=lon=>325+(lon-midLon)*cos*scale,y=lat=>145-(lat-midLat)*scale;
-  for(let i=0;i<5;i++){
-    const xx=45+i*140,yy=35+i*55;
-    chart.append(svg('line',{x1:xx,y1:25,x2:xx,y2:263,stroke:'#dfe6da','stroke-dasharray':'3 5'}),svg('line',{x1:40,y1:yy,x2:610,y2:yy,stroke:'#dfe6da','stroke-dasharray':'3 5'}));
-  }
-  chart.append(svg('text',{x:612,y:19,'text-anchor':'end'},'N ↑'),svg('text',{x:45,y:288},`${minLon.toFixed(3)}°`),svg('text',{x:610,y:288,'text-anchor':'end'},`${maxLon.toFixed(3)}°`),svg('text',{x:45,y:17},'Toronto station coordinates'));
-  values.sort((a,b)=>(b.average_docks||0)-(a.average_docks||0));
-  for(const v of values){
-    const label=`${v.name} · ${percent(v.availability_rate)} with a dock · ${number(v.average_docks)} avg. docks · ${number(v.dock_observations)} observations`;
-    const point=svg('circle',{cx:x(v.lon),cy:y(v.lat),r:Math.min(12,3+Math.sqrt(v.average_docks||0)),fill:colour(v.availability_rate),stroke:'white','stroke-width':1.2,'fill-opacity':.86});
-    actionable(point,label,()=>chooseStation(v.station_id),()=>$('station-detail').textContent=label);chart.append(point);
-  }
-  if(values.length<8)for(const v of values)chart.append(svg('text',{x:Math.min(480,Math.max(50,x(v.lon)+11)),y:y(v.lat)-12,fill:'#193c36'},v.name.length>23?v.name.slice(0,21)+'…':v.name));
+  $('station-detail').textContent=`${values.length.toLocaleString()} mapped stations${excluded?` · ${excluded} omitted: missing or out-of-Toronto coordinates (still in totals/table)`:''}. Select a marker to see its name, numbers and filter button.`;
+  DocksideMaps.render($('station-map'), values.map(v=>({
+    lat:v.lat,lon:v.lon,color:colour(v.availability_rate),radius:Math.min(10,3+Math.sqrt(v.average_docks||0)),
+    label:`${v.name} · ${percent(v.availability_rate)} with a dock · ${number(v.average_docks)} avg. docks · ${number(v.dock_observations)} observations`,
+    action:()=>chooseStation(v.station_id)
+  })),label=>{$('station-detail').textContent=label;});
 }
 function rankings(){const host=$('rankings');host.replaceChildren();const values=data.stations.filter(s=>s.availability_rate!=null).sort((a,b)=>a.availability_rate-b.availability_rate||b.dock_observations-a.dock_observations).slice(0,8);if(!values.length)return empty(host);values.forEach((v,i)=>{const row=el('button',null,'rank-row'),name=el('div'),bar=el('div',null,'rank-bar'),fill=el('div',null,'rank-fill');row.type='button';row.title=`${v.name}: ${number(v.dock_observations-v.available_observations)} full / ${number(v.dock_observations)} known observations`;fill.style.width=`${(1-v.availability_rate)*100}%`;bar.append(fill);name.append(el('div',v.name,'rank-name'),bar);row.append(el('span',String(i+1).padStart(2,'0'),'rank-number'),name,el('strong',percent(1-v.availability_rate),'rank-value'));row.onclick=()=>chooseStation(v.station_id);host.append(row);});}
 function heatmap(){const host=$('heatmap');host.replaceChildren();const grid=el('div',null,'heat-grid'),values=new Map(data.heatmap.map(r=>[r.heat_key,r]));grid.append(el('span'));for(let h=0;h<24;h++)grid.append(el('span',String(h).padStart(2,'0'),'hour-label'));for(let day=0;day<7;day++){grid.append(el('span',days[day],'day-label'));for(let hour=0;hour<24;hour++){const value=values.get(day*24+hour),cell=el('button',null,'heat-cell'+(value?.availability_rate==null?' empty':''));cell.type='button';const label=`${days[day]} ${hour}:00 · ${value?percent(value.availability_rate)+' with a dock':'no usable observations'}`;cell.title=label;cell.setAttribute('aria-label',label);if(value?.availability_rate!=null){cell.style.background=colour(value.availability_rate);cell.onclick=()=>inspectRows(label,[{weekday:days[day],local_hour:hour,...value}]);}else cell.disabled=true;grid.append(cell);}}host.append(grid);}

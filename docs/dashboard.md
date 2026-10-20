@@ -12,14 +12,15 @@ The opening range covers available history, capped at 31 Toronto-local calendar
 days ending at the latest aggregated hour. Choose From/Through, Station, Days and
 Time of day, then **Apply filters**. **Reset** returns to the opening range.
 **Refresh data** fetches again with the selected filters. There is no autoplay,
-animation, automatic refresh, routing service or tile/API-key dependency.
+animation, automatic refresh or routing service. Street maps now require internet
+access to OpenStreetMap tiles and the pinned Leaflet CDN; no API key is required.
 
 | View | What it shows | Manual interaction |
 |---|---|---|
 | KPI cards | Weighted average docks, observed dock availability, station count and collection coverage | Click for definitions, calculation and counts |
 | Dock availability trend | Hourly average reported usable docks | Hover/focus for values; click a point or View data |
 | Availability by hour | Aggregated Toronto-local hourly pattern | Click a bar to filter that hour |
-| Station geographic plot | Current-known coordinates; colour = availability; size = average docks | Hover/focus for station details; click to filter |
+| Station street map | OpenStreetMap streets and landmarks, current-known coordinates; colour = availability; size = average docks | Pan/zoom; select a marker for details/location link, then use its filter button |
 | Station ranking | Highest observed share of zero-dock reports | Click a station to filter; sample counts available in View data |
 | Week/hour heatmap | Availability by weekday and local hour | Click a nonempty cell for its actual counts |
 | Station table | Filtered station aggregates | Search, sort, paginate, focus a station or export CSV |
@@ -74,6 +75,40 @@ retained snapshots can be summarized during an upgrade; archived-only rows are
 not silently imported. Original hashes and raw evidence remain unchanged.
 
 ## API and storage
+
+### Street-map update (2026-10-20)
+
+Both the dashboard and `/demo` return finder use the shared `maps.js` component,
+Leaflet 1.9.4 (CDN files pinned with integrity hashes), and OpenStreetMap raster
+tiles. The finder marks destination/primary/alternative as D/P/A; coincident
+locations share a badge. Distances remain straight-line, not routed distances.
+Keyboard-accessible popups use text nodes for station content, not raw HTML.
+
+The browser directly contacts unpkg.com and tile.openstreetmap.org. These services
+receive the client's IP; tile URLs reveal the viewed geographic area. Exact
+coordinates are in explicit external location links, followed only on user click.
+Attribution stays visible, browser caching is respected, and no tile prefetch,
+offline download, API key or paid account is introduced. Tile service is best-effort:
+load errors/timeouts display a warning; a missing map library falls back to a list
+of coordinates and external location links. Data tables remain available.
+Before a high-traffic public deployment, review provider capacity/terms and choose
+a suitable tile service. Sources checked 2026-10-20:
+[Leaflet quick start](https://leafletjs.com/examples/quick-start/) and
+[OSM tile policy](https://operations.osmfoundation.org/policies/tiles/).
+
+For an existing Docker install, rebuild only the API to serve the changed assets:
+`docker compose up -d --build --no-deps api`, then reload the browser. Do not reset
+the database or delete volumes.
+
+Verification on 2026-10-20: 54 Python unit/contract tests and three shared-map
+Node tests passed (`node --test tests/unit/maps.test.cjs`). Browser fixture checks
+verified street tiles, marker popups, station filtering and coincident D/P finder
+markers at a narrow viewport. These are UI checks, not availability evidence.
+The Mac had about 5.2 GiB free, below the existing build threshold, so the seven
+changed static assets were copied into the running API container instead of
+rebuilding its image. Source changes are retained, but that container-only update
+does not survive recreation from the old image: rebuild after freeing disk space.
+The collector and database were not restarted or changed by this update.
 
 `GET /v1/dashboard` accepts optional `start_date`, `end_date` (`YYYY-MM-DD`),
 `station_id`, `day_type=all|weekday|weekend`, and `hour=0..23`. Dates are inclusive

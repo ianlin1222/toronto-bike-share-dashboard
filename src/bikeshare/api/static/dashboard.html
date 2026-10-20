@@ -5,7 +5,11 @@
   <meta name="theme-color" content="#174d40">
   <title>Dockside · Bike Share Toronto dashboard</title>
   <meta name="description" content="Explore observed Toronto dock availability by station, date, and time. Interactive charts, transparent data coverage, and a live dock finder.">
-  <link rel="stylesheet" href="/assets/dashboard.css"><script src="/assets/dashboard.js" defer></script>
+  <link rel="stylesheet" href="/assets/dashboard.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="/assets/maps.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+  <script src="/assets/maps.js" defer></script><script src="/assets/dashboard.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to dashboard</a>
@@ -46,7 +50,7 @@
       <section id="station-explorer">
         <div class="section-heading"><div><p class="eyebrow">A CLOSER LOOK</p><h2>Explore the stations</h2></div><p>Click a station on either chart to focus the whole dashboard.</p></div>
         <div class="chart-grid station-grid">
-          <article class="panel"><div class="panel-heading"><div><h2>Where docks are available</h2><p>Colour = observed availability · size = average docks</p></div><button class="data-button" data-table="stations">View data</button></div><div id="station-map" class="chart station-map"></div><div class="map-legend"><span><i class="dot gold"></i>Less often</span><span class="gradient"></span><span><i class="dot teal"></i>More often</span><small>Geographic plot · not a street map</small></div><div id="station-detail" class="station-detail" aria-live="polite">Hover or focus a station for its name and numbers. Click to filter.</div></article>
+          <article class="panel"><div class="panel-heading"><div><h2>Where docks are available</h2><p>Colour = observed availability · size = average docks</p></div><button class="data-button" data-table="stations">View data</button></div><div id="station-map"></div><div class="map-legend"><span><i class="dot gold"></i>Less often</span><span class="gradient"></span><span><i class="dot teal"></i>More often</span><small>Street map · current-known station locations</small></div><div id="station-detail" class="station-detail" aria-live="polite">Select a station for details and a location link.</div></article>
           <article class="panel"><div class="panel-heading"><div><h2>Stations to keep an eye on</h2><p>Highest full-dock observation share · not a forecast</p></div><button class="data-button" data-table="rankings">View data</button></div><div id="rankings" class="rankings"></div><p class="chart-foot">Among observed stations; sparse samples can be misleading.</p></article>
         </div>
         <article class="panel heat-panel"><div class="panel-heading"><div><h2>The week, hour by hour</h2><p>Share of fresh return-capable observations with at least one dock · click a cell to explore</p></div><button class="data-button" data-table="heatmap">View data</button></div><div id="heatmap" class="heatmap"></div><p class="chart-foot">Monday → Sunday · 00:00 → 23:00 · grey cells have no usable observations. DST repeated hours are combined here, but kept distinct in the trend.</p></article>

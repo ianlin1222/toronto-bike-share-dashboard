@@ -4,7 +4,11 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#174d40"><meta name="description" content="Find a Bike Share Toronto station with room for your return.">
   <title>Dockside · Toronto return stations</title>
-  <link rel="stylesheet" href="/assets/style.css"><script src="/assets/app.js" defer></script>
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="/assets/maps.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+  <script src="/assets/maps.js" defer></script><script src="/assets/app.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#search">Skip to destination search</a>
@@ -32,7 +36,7 @@
     <div class="results-panel" id="results-panel"><div class="results-heading"><div class="step-title"><span class="step">02</span><h2>Your return options</h2></div><button type="button" class="refresh" id="refresh" aria-label="Refresh station recommendations">↻ Refresh</button></div>
       <div id="mode-notice" class="notice" hidden></div>
       <div id="output" aria-live="polite" aria-atomic="false"><div class="empty"><span class="empty-icon" aria-hidden="true">↗</span><h3>A good ending starts here.</h3><p>Choose your destination, then find nearby stations with room for your bike.</p></div></div>
-      <div id="diagram-wrap" class="diagram-wrap" hidden><div class="diagram-heading"><span>Near your destination</span><span class="hint">Relative positions · not a street map</span></div><svg id="diagram" viewBox="0 0 560 220" role="img" aria-label="Relative station positions around your destination"></svg><p class="diagram-legend"><span>● Destination</span><span>P Primary</span><span>A Alternative</span></p></div>
+      <div id="diagram-wrap" class="diagram-wrap" hidden><div class="diagram-heading"><span>Near your destination</span><span class="hint">Street map · distances remain straight-line</span></div><div id="diagram"></div><p class="diagram-legend"><span>D Destination</span><span>P Primary</span><span>A Alternative</span></p></div>
       <div id="result-footer" class="result-footer" hidden><span id="result-time"></span><label class="check-label"><input type="checkbox" id="auto-refresh" checked> Update every minute</label></div>
     </div>
   </section>
